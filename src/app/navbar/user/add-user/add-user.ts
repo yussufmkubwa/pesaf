@@ -1,5 +1,6 @@
+
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { User } from '../../../services/user';
@@ -8,26 +9,23 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-add-user',
-  imports: [CommonModule,FormsModule,RouterModule],
+  imports: [CommonModule,FormsModule,RouterModule,ReactiveFormsModule],
   templateUrl: './add-user.html',
   styleUrl: './add-user.css'
 })
 export class AddUser {
   userForm!: FormGroup;
-  options: any[] = [];
-  filteredOptions!: Observable<any[]>;
+ 
   constructor(
     private dialogRef: MatDialogRef<AddUser>,
     private userService: User,
-
-    
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
+
   ngOnInit() {
     console.log('Data received in dialog:', this.data)
     this.configForm();
-    
-    if(this.data){
+    if (this.data) {
       this.userForm.patchValue(this.data);
     }
   }
@@ -44,39 +42,43 @@ export class AddUser {
       role: new FormControl('', [Validators.required]),
     });
   }
-
- 
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.plateNumber.toLowerCase().includes(filterValue));
-  }
-
   
-  }
+//   const dialogRef = this.dialog.open(AddUser, {
+//   width: '500px',
+//   data: { /* optional data to pass to the dialog */ }
+// });
+
+
+  // private _filter(value: string): any[] {
+  //   const filterValue = value.toLowerCase();
+  //   return this.options.filter(option => 
+  //     option.plateNumber && option.plateNumber.toLowerCase().includes(filterValue)
+  //   );
+  // }
+
+
 
   addUser() {
     if (this.userForm.valid) {
-      
-      this.userService.addUser(this.userForm.value).subscribe(response=>{
+      this.userService.addUser(this.userForm.value).subscribe((response) => {
         console.log('User added successfully', response);
         this.dialogRef.close(true); // Close the dialog and return true
-      })
+      });
       this.userForm.reset(); // Reset the form after submission
     } else {
       console.error('Form is invalid');
     }
   }
 
-  updateUser(){
+  updateUser() {
     if (this.userForm.valid) {
-      this.userForm.patchValue({
-        carId: this.userForm.get('carId')?.value.id
-      });
-      this.userService.update(this.userForm.value,this.data.id).subscribe(response=>{
+      // this.userForm.patchValue({
+      //   carId: this.userForm.get('carId')?.value.id
+      // });
+      this.userService.update(this.userForm.value, this.data.id).subscribe((response) => {
         console.log('User updated successfully', response);
         this.dialogRef.close(true); // Close the dialog and return true
-      })
+      });
       this.userForm.reset(); // Reset the form after submission
     } else {
       console.error('Form is invalid');
@@ -86,5 +88,4 @@ export class AddUser {
   close() {
     this.dialogRef.close();
   }
-
 }

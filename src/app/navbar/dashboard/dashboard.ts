@@ -34,6 +34,11 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(){
     this.getIrrigationEvent();
+
+    setInterval(() => {
+    this.getIrrigationEvent();
+  }, 5000);
+
   }
 
   getIrrigationEvent(){

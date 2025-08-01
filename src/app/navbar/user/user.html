@@ -2,7 +2,7 @@
   <h2 class="my-4">User Management</h2>
 
   <div class="col-12 mb-3">
-    <button type="button"  class="btn btn-success">Add User</button>
+    <button type="button"  (click)="addUser()" class="btn btn-success">Add User</button>
   </div>
 
   <hr class="my-2">
@@ -32,7 +32,7 @@
         <td>{{ user.phone_number }}</td>
         <td>{{ user.role }}</td>
         <td>
-          <!-- <button class="btn btn-sm btn-primary me-2" (click)="update(user)">Edit</button> -->
+          <button class="btn btn-sm btn-primary me-2" (click)="updateUser(user)">Edit</button>
           <button class="btn btn-sm btn-danger" (click)="deleteUser(user)">Delete</button>
         </td>
       </tr>

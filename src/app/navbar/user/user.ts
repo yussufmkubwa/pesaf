@@ -32,7 +32,7 @@ export class UserComponent {
   
 
   addUser() {
-    const dialogRef = this.dialog.open(this.AddUser, {
+    const dialogRef = this.dialog.open(AddUser, {
       width: '800px',
       data: null
     });
