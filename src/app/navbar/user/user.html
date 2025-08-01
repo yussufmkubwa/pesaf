@@ -1,0 +1,41 @@
+<div class="container">
+  <h2 class="my-4">User Management</h2>
+
+  <div class="col-12 mb-3">
+    <button type="button"  class="btn btn-success">Add User</button>
+  </div>
+
+  <hr class="my-2">
+
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Address</th>
+        <th>Phone Number</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.address }}</td>
+        <td>{{ user.phone_number }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <!-- <button class="btn btn-sm btn-primary me-2" (click)="update(user)">Edit</button> -->
+          <button class="btn btn-sm btn-danger" (click)="deleteUser(user)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

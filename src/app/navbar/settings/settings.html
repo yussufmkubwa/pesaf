@@ -1,0 +1,46 @@
+<div class="settings-container">
+  <h2 class="page-title">System Settings</h2>
+  <p class="page-subtitle">Adjust various settings for your irrigation and monitoring system.</p>
+
+  <div class="setting-section">
+    <h3>General Settings</h3>
+    <div class="form-group">
+      <label for="system-name">System Name:</label>
+      <input type="text" id="system-name" value="Smart Irrigation System V1.0" />
+    </div>
+    <div class="form-group">
+      <label for="language">Language:</label>
+      <select id="language">
+        <option value="en">English</option>
+        <option value="sw">Kiswahili</option>
+      </select>
+    </div>
+    <button class="btn-save">Save General Settings</button>
+  </div>
+
+  <div class="setting-section">
+    <h3>Irrigation Settings</h3>
+    <div class="form-group checkbox-group">
+      <input type="checkbox" id="auto-irrigation" checked />
+      <label for="auto-irrigation">Automatic Irrigation</label>
+    </div>
+    <div class="form-group">
+      <label for="min-moisture">Minimum Moisture (in %):</label>
+      <input type="number" id="min-moisture" value="60" min="0" max="100" />
+    </div>
+    <button class="btn-save">Save Irrigation Settings</button>
+  </div>
+
+  <div class="setting-section">
+    <h3>Notification Settings</h3>
+    <div class="form-group checkbox-group">
+      <input type="checkbox" id="email-notifications" checked />
+      <label for="email-notifications">Email Notifications</label>
+    </div>
+    <div class="form-group checkbox-group">
+      <input type="checkbox" id="sms-notifications" />
+      <label for="sms-notifications">SMS Notifications</label>
+    </div>
+    <button class="btn-save">Save Notification Settings</button>
+  </div>
+</div>

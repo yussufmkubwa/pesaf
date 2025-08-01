@@ -1,0 +1,43 @@
+<div class="reports-container">
+  <h2 class="page-title">📊 System Reports</h2>
+  <p class="page-subtitle">View various reports on the performance of your irrigation and monitoring system.</p>
+
+  <div class="report-options">
+    <div class="form-group">
+      <label for="report-type">Report Type:</label>
+      <select id="report-type">
+        <option value="daily">Daily Report</option>
+        <option value="weekly">Weekly Report</option>
+        <option value="monthly">Monthly Report</option>
+        <option value="custom">Custom Report</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date">
+    </div>
+    <div class="form-group">
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date">
+    </div>
+    <button class="btn-generate-report">📥 Generate Report</button>
+  </div>
+
+  <div class="report-display">
+    <h3>💧 Water Usage Report (This Week)</h3>
+    <div class="chart-placeholder">
+      <p>[Chart will be displayed here]</p>
+    </div>
+    <p><strong>Total Water Used:</strong> <span>1200 L</span></p>
+    <p><strong>Average Daily Usage:</strong> <span>171 L</span></p>
+  </div>
+
+  <div class="report-display">
+    <h3>🌱 Soil Condition Report (Last Month)</h3>
+    <div class="chart-placeholder">
+      <p>[Chart will be displayed here]</p>
+    </div>
+    <p><strong>Average Soil Moisture:</strong> <span>68%</span></p>
+    <p><strong>Low Moisture Events:</strong> <span>5</span></p>
+  </div>
+</div>

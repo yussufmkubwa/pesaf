@@ -1,0 +1,26 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Login to Your Account</h2>
+    <p>Please enter your username and password to continue.</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" formControlName="username" placeholder="Enter your username" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" placeholder="Enter your password" required />
+      </div>
+
+      <button type="submit">Login</button>
+
+      <div class="form-footer">
+        <a href="#">Forgot password?</a>
+        <span> | </span>
+        <a href="#">Create an account</a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="irrigation-container">
+  <h2 class="page-title">Irrigation Control</h2>
+  <p class="page-subtitle">Manage your irrigation zones and adjust scheduling.</p>
+
+  <div class="irrigation-zone">
+    <h3>Zone 1: Maize Field</h3>
+    <div class="zone-status">
+      <p>Current Status: <span class="status-active">Irrigating</span></p>
+      <p>Time Remaining: <span class="time-remaining">15 minutes</span></p>
+    </div>
+    <div class="zone-controls">
+      <button class="btn btn-primary">Start Now</button>
+      <button class="btn btn-danger">Stop</button>
+      <button class="btn btn-secondary">Edit Schedule</button>
+    </div>
+  </div>
+
+  <div class="irrigation-zone">
+    <h3>Zone 2: Vegetable Garden</h3>
+    <div class="zone-status">
+      <p>Current Status: <span class="status-inactive">Stopped</span></p>
+      <p>Next Schedule: <span class="time-schedule">Tomorrow at 6:00 AM</span></p>
+    </div>
+    <div class="zone-controls">
+      <button class="btn btn-primary">Start Now</button>
+      <button class="btn btn-danger" disabled>Stop</button>
+      <button class="btn btn-secondary">Edit Schedule</button>
+    </div>
+  </div>
+
+  <div class="schedule-section">
+    <h3>Irrigation Schedules</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Zone</th>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Duration (min)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Maize Field</td>
+            <td>Daily</td>
+            <td>05:00 AM</td>
+            <td>30</td>
+            <td>
+              <button class="btn btn-edit">Edit</button>
+              <button class="btn btn-delete">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Vegetable Garden</td>
+            <td>Mon, Thu</td>
+            <td>06:00 AM</td>
+            <td>20</td>
+            <td>
+              <button class="btn btn-edit">Edit</button>
+              <button class="btn btn-delete">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="btn btn-add">Add New Schedule</button>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="app-layout">
+  <nav class="sidebar" aria-label="Primary Navigation">
+    <div class="sidebar-logo" tabindex="0" aria-label="Smart Irrigation Logo">
+      🌿 <span>Smart Irrigation</span>
+    </div>
+
+    <ul class="sidebar-links" role="menu">
+      <li role="none">
+        <a routerLink="dashboard" routerLinkActive="active" role="menuitem" aria-current="page">
+          📊 <span>Dashboard</span>
+        </a>
+      </li>
+      <li role="none">
+        <a routerLink="monitoring" routerLinkActive="active" role="menuitem">
+          📡 <span>Monitoring</span>
+        </a>
+      </li>
+      <li role="none">
+        <a routerLink="irrigation" routerLinkActive="active" role="menuitem">
+          💧 <span>Irrigation</span>
+        </a>
+      </li>
+      <li role="none">
+        <a routerLink="notifications" routerLinkActive="active" role="menuitem">
+          🔔 <span>Notifications</span>
+        </a>
+      </li>
+      <li role="none">
+        <a routerLink="reports" routerLinkActive="active" role="menuitem">
+          📄 <span>Reports</span>
+        </a>
+      </li>
+      <li role="none">
+        <a routerLink="settings" routerLinkActive="active" role="menuitem">
+          ⚙️ <span>Settings</span>
+        </a>
+      </li>
+      <li role="none">
+        <a routerLink="user" routerLinkActive="active" role="menuitem">
+          ⚙️ <span>User</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="logout-section">
+      <a routerLink="/" class="logout-link" role="button">
+        🚪 <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-content" tabindex="0">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,63 @@
+<div class="dashboard-container">
+  <h2 class="title">Smart Irrigation System Dashboard</h2>
+  <p class="subtitle">Welcome to the dashboard! Here you'll see a summary of your system's current status.</p>
+<!-- 
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Soil Condition</h3>
+      <p>Moisture: <span class="value">65%</span></p>
+      <p>Temperature: <span class="value">25°C</span></p>
+    </div>
+    <div class="stat-card">
+      <h3>Seed Status</h3>
+      <p>Growth: <span class="value">80%</span></p>
+      <p>Health: <span class="value good">Good</span></p>
+    </div>
+    <div class="stat-card">
+      <h3>Water Usage</h3>
+      <p>Today: <span class="value">150 L</span></p>
+      <p>This Week: <span class="value">800 L</span></p>
+    </div>
+    <div class="stat-card notification-card">
+      <h3>New Alerts</h3>
+      <p><span class="value alert-count">3</span> unread notifications</p>
+      <button class="alert-btn">View Alerts</button>
+    </div>
+  </div> -->
+<!-- </div>
+<div class="dashboard-container">
+  <h2 class="title">Smart Irrigation System Dashboard</h2>
+  <p class="subtitle">Welcome to the dashboard! Here you'll see a summary of your system's current status.</p>
+
+  <div class="stats-grid" *ngIf="irrigationData">
+    <div class="stat-card">
+      <h3>Soil Condition</h3>
+      <p>Moisture: <span class="value">{{ irrigationData.soilMoisture }}%</span></p>
+      <p>Temperature: <span class="value">{{ irrigationData.soilTemp }}°C</span></p>
+    </div>
+    <div class="stat-card">
+      <h3>Seed Status</h3>
+      <p>Growth: <span class="value">{{ irrigationData.seedGrowth }}%</span></p>
+      <p>Health: <span class="value good">{{ irrigationData.seedHealth }}</span></p>
+    </div>
+    <div class="stat-card">
+      <h3>Water Usage</h3>
+      <p>Today: <span class="value">{{ irrigationData.todayUsage }} L</span></p>
+      <p>This Week: <span class="value">{{ irrigationData.weekUsage }} L</span></p>
+    </div>
+    <div class="stat-card notification-card">
+      <h3>New Alerts</h3>
+      <p><span class="value alert-count">{{ irrigationData.alerts?.length }}</span> unread notifications</p>
+      <button class="alert-btn">View Alerts</button>
+    </div>
+  </div>
+</div> -->
+
+<!-- LIST -->
+<div *ngFor="let event of irrigationData" class="event-card">
+  <h3>{{ event.zone_name }}</h3>
+  <p><strong>Start:</strong> {{ event.start_time }}</p>
+  <p><strong>Duration:</strong> {{ event.duration_minutes }} minutes</p>
+  <p><strong>Moisture:</strong> {{ event.moisture_level_before }}% → {{ event.moisture_level_after }}%</p>
+  <p><strong>Created By:</strong> {{ event.created_by_username }} ({{ event.created_by_email }})</p>
+</div>

@@ -1,0 +1,85 @@
+.notifications-container {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', sans-serif;
+  color: #2c3e50;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.notification-item {
+  background-color: #ffffff;
+  border-left: 6px solid #bdc3c7;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, opacity 0.3s;
+  position: relative;
+}
+
+.notification-item.unread {
+  background-color: #fef9e7;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.notification-time {
+  font-size: 0.9rem;
+  color: #95a5a6;
+}
+
+.alert-warning {
+  border-left-color: #f1c40f;
+}
+
+.alert-success {
+  border-left-color: #2ecc71;
+}
+
+.alert-error {
+  border-left-color: #e74c3c;
+}
+
+.alert-info {
+  border-left-color: #3498db;
+}
+
+.btn-mark-read {
+  margin-top: 1rem;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.btn-mark-read:hover {
+  background-color: #d0d7de;
+}
