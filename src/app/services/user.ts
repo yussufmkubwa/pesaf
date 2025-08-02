@@ -22,7 +22,8 @@ export class User {
   }
 
   update(body: any,id: any):Observable<any>{
-    return this.http.put(`${this.url}/${id}`,body);
+    // return this.http.put(`${this.url}/${id}/`,body);
+    return this.http.put(`${this.url}${id}/`, body);
 
   }
 

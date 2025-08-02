@@ -34,8 +34,8 @@ export class AddUser {
     this.userForm = new FormGroup({
       id: new FormControl(''),
       userName: new FormControl('', [Validators.required]),
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
+      first_name: new FormControl('', [Validators.required]),
+      last_name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       address: new FormControl('', [Validators.required]),
       phone_Number: new FormControl('', [Validators.required]),
