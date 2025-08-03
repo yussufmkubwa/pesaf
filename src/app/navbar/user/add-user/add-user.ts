@@ -36,6 +36,7 @@ export class AddUser {
       first_name: new FormControl('', [Validators.required]),
       last_name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', this.data ? [] : [Validators.required, Validators.minLength(6)]),
       address: new FormControl('', [Validators.required]),
       phone_number: new FormControl('', [Validators.required]),
       role: new FormControl('', [Validators.required]),
@@ -59,7 +60,12 @@ export class AddUser {
 
   updateUser() {
     if (this.userForm.valid) {
-      this.userService.update(this.userForm.value, this.data.id).subscribe((response: any) => {
+      const formData = { ...this.userForm.value };
+      // Remove password field if it's empty for updates
+      if (!formData.password) {
+        delete formData.password;
+      }
+      this.userService.update(formData, this.data.id).subscribe((response: any) => {
         console.log('User updated successfully', response);
         this.dialogRef.close(true);
       }, (error: any) => {
