@@ -39,6 +39,7 @@ export class AddUser {
       address: new FormControl('', [Validators.required]),
       phone_number: new FormControl('', [Validators.required]),
       role: new FormControl('', [Validators.required]),
+      is_active: new FormControl(true),
     });
   }
 

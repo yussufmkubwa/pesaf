@@ -17,16 +17,18 @@ export class User {
     return this.http.post(this.url,body)
   }
 
-  getUserById(id: any): Observable<any> {
-    return this.http.get(`${this.url}${id}/`);
+  getUserById(id: any):Observable<any>{
+    return this.http.get(`${this.url}/${id}`);
   }
 
-  update(body: any, id: any): Observable<any> {
-    return this.http.put(`${this.url}${id}/`, body);
+  update(body: any,id: any):Observable<any>{
+    // return this.http.put(`${this.url}/${id}/`,body);
+    return this.http.put(`${this.url}${id}`, body);
+
   }
 
-  deleteUser(id: any): Observable<any> {
-    return this.http.delete(`${this.url}${id}/`);
+  deleteUser(id: any):Observable<any>{
+    return this.http.delete(`${this.url}/${id}`);
   }
   
 }
