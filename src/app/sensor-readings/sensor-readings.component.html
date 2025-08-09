@@ -1,0 +1,7 @@
+<div *ngIf="latestReading">
+  <p><strong>Temperature:</strong> {{ latestReading.temperature }} °C</p>
+  <p><strong>Soil Moisture:</strong> {{ latestReading.soil_moisture }} %</p>
+</div>
+<div *ngIf="!latestReading">
+  <p>Loading sensor data...</p>
+</div>

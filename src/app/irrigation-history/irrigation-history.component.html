@@ -1,0 +1,19 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Duration (min)</th>
+      <th scope="col">Water Consumed (L)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let event of irrigationEvents">
+      <td>{{ event.timestamp | date:'short' }}</td>
+      <td>{{ event.duration_minutes }}</td>
+      <td>{{ event.water_consumed_liters }}</td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="irrigationEvents.length === 0">
+  <p>No recent irrigation events.</p>
+</div>

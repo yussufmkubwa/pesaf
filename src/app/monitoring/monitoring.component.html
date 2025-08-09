@@ -1,0 +1,7 @@
+<div class="monitoring-container">
+  <h2>Pump Control</h2>
+  <p>Pump is currently: <strong>{{ pumpStatus }}</strong></p>
+  <button class="btn btn-primary" (click)="togglePump()">
+    Turn {{ pumpStatus === 'ON' ? 'OFF' : 'ON' }}
+  </button>
+</div>

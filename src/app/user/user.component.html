@@ -1,0 +1,108 @@
+<div class="container">
+  <h2 class="my-4">User Management</h2>
+
+  <div class="col-12 mb-3">
+    <button type="button"  (click)="addUser()" class="btn btn-success">Add User</button>
+  </div>
+
+  <hr class="my-2">
+
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Address</th>
+        <th>Phone Number</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.address }}</td>
+        <td>{{ user.phone_number }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary me-2" (click)="updateUser(user)">Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteUser(user)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="p-4" *ngIf="showForm">
+  <h3>ADD/UPDATE USER</h3>
+  <hr class="py-2" />
+
+  <form [formGroup]="userForm" class="row g-3">
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Username" formControlName="username" />
+    </div>
+
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="First Name" formControlName="first_name" />
+    </div>
+
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Last Name" formControlName="last_name" />
+    </div>
+
+    <div class="col-md-6">
+      <input type="email" class="form-control" placeholder="Email Address" formControlName="email" />
+    </div>
+
+    <div class="col-md-6" *ngIf="!data">
+      <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+    </div>
+
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Address" formControlName="address" />
+    </div>
+
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="Phone Number" formControlName="phone_number" />
+    </div>
+
+    <div class="col-md-6">
+      <select class="form-control" formControlName="role">
+        <option value="">Select Role</option>
+        <option value="admin">Admin</option>
+        <option value="farmer">Farmer</option>
+      </select>
+    </div>
+
+    <hr />
+
+    <div class="col-12 d-flex justify-content-between">
+      <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
+      <button
+        type="submit"
+        *ngIf="!data"
+        (click)="addUser()"
+        class="btn btn-success"
+        [disabled]="userForm.invalid"
+      >
+        Add User
+      </button>
+      <button
+        type="submit"
+        *ngIf="data"
+        (click)="updateUser()"
+        class="btn btn-success"
+        [disabled]="userForm.invalid"
+      >
+        Update User
+      </button>
+    </div>
+  </form>
+</div>

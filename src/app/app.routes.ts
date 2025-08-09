@@ -1,42 +1,31 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { LoginComponent } from './login/login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { MonitoringComponent } from './monitoring/monitoring.component';
+import { IrrigationComponent } from './irrigation/irrigation.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { ReportsComponent } from './reports/reports.component';
+import { SettingsComponent } from './settings/settings.component';
+import { UserComponent } from './user/user.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { RoleGuard } from './role.guard';
 
-import { DashboardComponent } from './navbar/dashboard/dashboard';
-import { Login } from './login/login';
-import { Reports } from './navbar/reports/reports';
-import { Monitoring } from './navbar/monitoring/monitoring';
-import { Irrigation } from './navbar/irrigation/irrigation';
-import { Settings } from './navbar/settings/settings';
-import { Notifications } from './navbar/notifications/notifications';
-import { Navbar } from './navbar/navbar';
-import { UserComponent } from './navbar/user/user';
-
-// Sanidi njia za programu
 export const routes: Routes = [
-
-   // Default route
-  { path: '', component: Login },
-
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   {
-    path: 'navbar',
-    component: Navbar,
+    path: '',
+    component: NavigationComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'monitoring', component: Monitoring },
-      { path: 'irrigation', component: Irrigation },
-      { path: 'settings', component: Settings },
-      { path: 'notifications', component: Notifications },
-      { path: 'reports', component: Reports },
-      { path: 'user', component: UserComponent},
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // default inside navbar
+      { path: 'dashboard', component: DashboardComponent, canActivate: [RoleGuard], data: { role: 'farmer' } },
+      { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [RoleGuard], data: { role: 'admin' } },
+      { path: 'monitoring', component: MonitoringComponent },
+      { path: 'irrigation', component: IrrigationComponent },
+      { path: 'notifications', component: NotificationsComponent },
+      { path: 'reports', component: ReportsComponent },
+      { path: 'settings', component: SettingsComponent },
+      { path: 'user', component: UserComponent }
     ]
-  },
-
-  { path: '**', redirectTo: '/login' } // Wildcard route for unknown paths
+  }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }

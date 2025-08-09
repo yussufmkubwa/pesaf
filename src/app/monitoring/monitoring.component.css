@@ -1,0 +1,84 @@
+.monitoring-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f4f7f6;
+  color: #333;
+}
+
+.page-title {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 1.2em;
+  margin-bottom: 40px;
+}
+
+.data-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 1.8em;
+  color: #34495e;
+  border-bottom: 2px solid #16a085;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.sensor-card, .seed-status-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sensor-card:hover, .seed-status-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.sensor-card h4, .seed-status-card h4 {
+  font-size: 1.4em;
+  color: #2980b9;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.sensor-card p, .seed-status-card p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #555;
+}
+
+.data-value {
+  font-weight: bold;
+  color: #333;
+}
+
+.data-date {
+  font-style: italic;
+  color: #888;
+}
+
+.good {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.warning {
+  color: #f39c12;
+  font-weight: bold;
+}
