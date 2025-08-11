@@ -9,7 +9,9 @@ import { environment } from 'src/environments/environment';
 })
 export class DashboardService {
   private url = `${environment.apiUrl}/api/irrigation-events/`;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    console.log('DashboardService url:', this.url);
+  }
 
   getAllIrrigationEvents(): Observable<any> {
     return this.http.get(this.url);

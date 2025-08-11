@@ -18,7 +18,9 @@ export interface IrrigationEvent {
 export class IrrigationEventService {
   private apiUrl = environment.apiUrl + '/irrigation-events/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    console.log('IrrigationEventService apiUrl:', this.apiUrl);
+  }
 
   getIrrigationEvents(): Observable<IrrigationEvent[]> {
     return this.http.get<IrrigationEvent[]>(this.apiUrl);
