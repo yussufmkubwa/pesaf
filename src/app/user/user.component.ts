@@ -49,11 +49,18 @@ export class UserComponent implements OnInit {
   }
 
   addUser(): void {
-    this.data = null;
-    this.showForm = true;
-    this.userForm.reset();
-    this.userForm.get('password')?.setValidators([Validators.required]);
-    this.userForm.get('password')?.updateValueAndValidity();
+    if (this.userForm.valid) {
+      this.userService.createUser(this.userForm.value).subscribe({
+        next: (data) => {
+          console.log('User added:', data);
+          this.loadUsers();
+          this.close();
+        },
+        error: (error) => {
+          console.error('Error adding user:', error);
+        }
+      });
+    }
   }
 
   updateUser(user?: User): void {

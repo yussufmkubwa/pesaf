@@ -5,6 +5,11 @@
     </div>
 
     <ul class="sidebar-links" role="menu">
+      <li role="none" *ngIf="isAdmin()">
+        <a routerLink="admin-dashboard" routerLinkActive="active" role="menuitem">
+          👑 <span>Admin</span>
+        </a>
+      </li>
       <li role="none">
         <a routerLink="dashboard" routerLinkActive="active" role="menuitem" aria-current="page">
           📊 <span>Dashboard</span>
