@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { UserService, User } from '../user.service';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -11,17 +11,44 @@ import { UserService, User } from '../user.service';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
-  user: User | null = null;
+  userRole: string | null = null;
 
-  constructor(private userService: UserService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.userService.getCurrentUser().subscribe(user => {
-      this.user = user;
-    });
+    // First check if we have the role in localStorage
+    this.userRole = localStorage.getItem('userRole');
+    
+    // If we have an access token but no role, try to get it from the API
+    if (localStorage.getItem('accessToken') && !this.userRole) {
+      this.authService.getMe().subscribe({
+        next: (user) => {
+          this.userRole = user.role;
+          localStorage.setItem('userRole', user.role);
+        },
+        error: (error) => {
+          console.error('Failed to get user info in navigation', error);
+          // If unauthorized, redirect to login
+          if (error.status === 401) {
+            this.logout();
+          }
+        }
+      });
+    } else if (!localStorage.getItem('accessToken')) {
+      // No token, redirect to login
+      this.router.navigate(['/login']);
+    }
   }
 
   isAdmin(): boolean {
-    return this.user?.role === 'admin';
+    // Get the latest value directly from localStorage
+    return localStorage.getItem('userRole') === 'admin';
+  }
+
+  logout() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userRole');
+    this.router.navigate(['/login']);
   }
 }

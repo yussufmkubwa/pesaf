@@ -7,12 +7,12 @@
     <ul class="sidebar-links" role="menu">
       <li role="none" *ngIf="isAdmin()">
         <a routerLink="admin-dashboard" routerLinkActive="active" role="menuitem">
-          👑 <span>Admin</span>
+          👑 <span>Admin Dashboard</span>
         </a>
       </li>
-      <li role="none">
+      <li role="none" *ngIf="!isAdmin()">
         <a routerLink="dashboard" routerLinkActive="active" role="menuitem" aria-current="page">
-          📊 <span>Dashboard</span>
+          📊 <span>Farmer Dashboard</span>
         </a>
       </li>
       <li role="none">
@@ -40,15 +40,15 @@
           ⚙️ <span>Settings</span>
         </a>
       </li>
-      <li role="none">
+      <li role="none" *ngIf="isAdmin()">
         <a routerLink="user" routerLinkActive="active" role="menuitem">
-          ⚙️ <span>User</span>
+          👥 <span>User Management</span>
         </a>
       </li>
     </ul>
 
     <div class="logout-section">
-      <a routerLink="/" class="logout-link" role="button">
+      <a (click)="logout()" class="logout-link" role="button" style="cursor: pointer;">
         🚪 <span>Logout</span>
       </a>
     </div>

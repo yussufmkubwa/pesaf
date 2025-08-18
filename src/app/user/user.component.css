@@ -3,15 +3,29 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-section h2 {
+  margin: 0;
+  color: #343a40;
+}
+
 .table {
   width: 100%;
   margin-top: 20px;
   border-collapse: collapse;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .table-bordered th, .table-bordered td {
   border: 1px solid #dee2e6;
-  padding: 8px;
+  padding: 12px 15px;
+  text-align: left;
 }
 
 .table-dark th {
@@ -19,8 +33,21 @@
   color: #fff;
 }
 
+.table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
 .btn {
   cursor: pointer;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  margin-right: 5px;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.85;
 }
 
 .btn-success {
@@ -38,25 +65,128 @@
   color: #fff;
 }
 
-.p-4 {
-  padding: 1.5rem !important;
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 4px;
+}
+
+.badge-admin {
+  background-color: #007bff;
+}
+
+.badge-farmer {
+  background-color: #28a745;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 0.875rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Add font awesome icons using CSS */
+.fas {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+.fa-edit:before {
+  content: "✎"; /* Pencil symbol */
+}
+
+.fa-trash:before {
+  content: "🗑️"; /* Trash symbol */
+}
+
+.fa-save:before {
+  content: "💾"; /* Save symbol */
+}
+
+.fa-plus:before {
+  content: "+"; /* Plus symbol */
+}
+
+.fa-times:before {
+  content: "✖"; /* Times symbol */
+}
+
+.form-container {
+  padding: 24px;
   background-color: #f8f9fa;
-  border-radius: .25rem;
+  border-radius: 8px;
   margin-top: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.form-container h3 {
+  color: #343a40;
+  margin-bottom: 15px;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
 }
 
 .form-control {
   display: block;
   width: 100%;
-  padding: .375rem .75rem;
+  padding: 10px 12px;
   font-size: 1rem;
   line-height: 1.5;
   color: #495057;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  border-radius: 4px;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .row {

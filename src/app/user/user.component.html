@@ -1,90 +1,121 @@
 <div class="container">
-  <h2 class="my-4">User Management</h2>
+  <div class="header-section">
+    <h2 class="my-4">User Management</h2>
 
-  <div class="col-12 mb-3">
-    <button type="button"  (click)="addUser()" class="btn btn-success">Add User</button>
+    <div class="col-12 mb-3">
+      <button type="button" (click)="addUser()" class="btn btn-success">
+        <i class="fas fa-plus"></i> Add New User
+      </button>
+    </div>
   </div>
 
   <hr class="my-2">
 
-  <table class="table table-bordered">
-    <thead class="table-dark">
-      <tr>
-        <th>#</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Address</th>
-        <th>Phone Number</th>
-        <th>Role</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.first_name }}</td>
-        <td>{{ user.last_name }}</td>
-        <td>{{ user.address }}</td>
-        <td>{{ user.phone_number }}</td>
-        <td>{{ user.role }}</td>
-        <td>
-          <button class="btn btn-sm btn-primary me-2" (click)="updateUser(user)">Edit</button>
-          <button class="btn btn-sm btn-danger" (click)="deleteUser(user)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>
+            <span class="badge" [ngClass]="{'badge-admin': user.role === 'admin', 'badge-farmer': user.role === 'farmer'}">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-primary" (click)="updateUser(user)" title="Edit user">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteUser(user)" title="Delete user">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="users.length === 0">
+          <td colspan="6" class="text-center">No users found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<div class="p-4" *ngIf="showForm">
-  <h3>ADD/UPDATE USER</h3>
+<div class="form-container" *ngIf="showForm">
+  <h3>{{ data ? 'Update User' : 'Add New User' }}</h3>
   <hr class="py-2" />
 
   <form [formGroup]="userForm" class="row g-3">
     <div class="col-md-4">
-      <input type="text" class="form-control" placeholder="Username" formControlName="username" />
+      <label for="username" class="form-label">Username*</label>
+      <input type="text" class="form-control" id="username" formControlName="username" />
+      <div class="form-error" *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
+        Username is required
+      </div>
     </div>
 
     <div class="col-md-4">
-      <input type="text" class="form-control" placeholder="First Name" formControlName="first_name" />
+      <label for="first_name" class="form-label">First Name</label>
+      <input type="text" class="form-control" id="first_name" formControlName="first_name" />
     </div>
 
     <div class="col-md-4">
-      <input type="text" class="form-control" placeholder="Last Name" formControlName="last_name" />
+      <label for="last_name" class="form-label">Last Name</label>
+      <input type="text" class="form-control" id="last_name" formControlName="last_name" />
     </div>
 
     <div class="col-md-6">
-      <input type="email" class="form-control" placeholder="Email Address" formControlName="email" />
+      <label for="email" class="form-label">Email Address*</label>
+      <input type="email" class="form-control" id="email" formControlName="email" />
+      <div class="form-error" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+        Valid email is required
+      </div>
     </div>
 
     <div class="col-md-6" *ngIf="!data">
-      <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+      <label for="password" class="form-label">Password*</label>
+      <input type="password" class="form-control" id="password" formControlName="password" />
+      <div class="form-error" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+        Password is required for new users
+      </div>
     </div>
 
     <div class="col-md-6">
-      <input type="text" class="form-control" placeholder="Address" formControlName="address" />
+      <label for="address" class="form-label">Address</label>
+      <input type="text" class="form-control" id="address" formControlName="address" />
     </div>
 
     <div class="col-md-6">
-      <input type="text" class="form-control" placeholder="Phone Number" formControlName="phone_number" />
+      <label for="phone_number" class="form-label">Phone Number</label>
+      <input type="text" class="form-control" id="phone_number" formControlName="phone_number" />
     </div>
 
     <div class="col-md-6">
-      <select class="form-control" formControlName="role">
+      <label for="role" class="form-label">Role*</label>
+      <select class="form-control" id="role" formControlName="role">
         <option value="">Select Role</option>
         <option value="admin">Admin</option>
         <option value="farmer">Farmer</option>
       </select>
+      <div class="form-error" *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched">
+        Role is required
+      </div>
     </div>
 
-    <hr />
-
-    <div class="col-12 d-flex justify-content-between">
-      <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
+    <div class="col-12 mt-4 form-buttons">
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        <i class="fas fa-times"></i> Cancel
+      </button>
       <button
         type="submit"
         *ngIf="!data"
@@ -92,16 +123,16 @@
         class="btn btn-success"
         [disabled]="userForm.invalid"
       >
-        Add User
+        <i class="fas fa-save"></i> Add User
       </button>
       <button
         type="submit"
         *ngIf="data"
         (click)="updateUser()"
-        class="btn btn-success"
+        class="btn btn-primary"
         [disabled]="userForm.invalid"
       >
-        Update User
+        <i class="fas fa-save"></i> Update User
       </button>
     </div>
   </form>

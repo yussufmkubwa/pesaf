@@ -35,9 +35,9 @@
           ⚙️ <span>Settings</span>
         </a>
       </li>
-      <li role="none">
+      <li role="none" *ngIf="isAdmin">
         <a routerLink="user" routerLinkActive="active" role="menuitem">
-          ⚙️ <span>User</span>
+          👥 <span>User Management</span>
         </a>
       </li>
     </ul>

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserService, User } from '../user.service';
+import { User, UserService } from '../user.service';
 
 @Component({
   selector: 'app-user',
@@ -49,7 +49,16 @@ export class UserComponent implements OnInit {
   }
 
   addUser(): void {
-    if (this.userForm.valid) {
+    if (!this.showForm) {
+      // Open the form for adding a new user
+      this.data = null;
+      this.showForm = true;
+      this.userForm.reset();
+      // Add password validation for new user
+      this.userForm.get('password')?.setValidators([Validators.required]);
+      this.userForm.get('password')?.updateValueAndValidity();
+    } else if (this.userForm.valid) {
+      // Submit the form for adding a new user
       this.userService.createUser(this.userForm.value).subscribe({
         next: (data) => {
           console.log('User added:', data);
