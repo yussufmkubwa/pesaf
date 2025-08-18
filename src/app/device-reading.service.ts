@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 
@@ -15,16 +15,25 @@ export interface DeviceReading {
   providedIn: 'root'
 })
 export class DeviceReadingService {
-  private apiUrl = environment.apiUrl + '/device-readings/';
+  // Updated to match the API endpoints described
+  private apiUrl = environment.apiUrl + '/api/devices/readings/';
+  private iotApiUrl = environment.apiUrl + '/api/iot/readings/';
 
   constructor(private http: HttpClient) { }
 
+  // Web interface (Authenticated) endpoint
   getDeviceReadings(): Observable<DeviceReading[]> {
     return this.http.get<DeviceReading[]>(this.apiUrl);
   }
 
+  // Get readings for a specific device
   getDeviceReadingById(id: number): Observable<DeviceReading> {
     return this.http.get<DeviceReading>(`${this.apiUrl}${id}/`);
+  }
+  
+  // Get IoT device readings (unauthenticated)
+  getIoTDeviceReadings(): Observable<DeviceReading[]> {
+    return this.http.get<DeviceReading[]>(this.iotApiUrl);
   }
 
   createDeviceReading(reading: DeviceReading): Observable<DeviceReading> {

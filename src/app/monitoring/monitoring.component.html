@@ -1,7 +1,116 @@
 <div class="monitoring-container">
-  <h2>Pump Control</h2>
-  <p>Pump is currently: <strong>{{ pumpStatus }}</strong></p>
-  <button class="btn btn-primary" (click)="togglePump()">
-    Turn {{ pumpStatus === 'ON' ? 'OFF' : 'ON' }}
-  </button>
+  <div class="monitoring-header">
+    <h2>System Monitoring</h2>
+    <button class="btn btn-outline-primary refresh-btn" (click)="refreshData()">
+      <i class="fas fa-sync-alt"></i> Refresh Data
+    </button>
+  </div>
+  
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+  
+  <!-- Latest readings section -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between">
+      <h3 class="mb-0">Current Conditions</h3>
+      <span *ngIf="latestReading?.timestamp">Last updated: {{ latestReading?.timestamp | date:'medium' }}</span>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center">
+        <p>Loading latest readings...</p>
+      </div>
+      <div *ngIf="!loading" class="row">
+        <div *ngIf="!latestReading" class="col-12 text-center">
+          <p>No readings available</p>
+        </div>
+        <div *ngIf="latestReading" class="col-md-6">
+          <div class="current-reading">
+            <div class="reading-icon">🌡️</div>
+            <div class="reading-details">
+              <span class="reading-label">Temperature</span>
+              <span class="reading-value" [ngClass]="getTemperatureClass(latestReading.temperature)">
+                {{ latestReading.temperature }}°C
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="latestReading" class="col-md-6">
+          <div class="current-reading">
+            <div class="reading-icon">💧</div>
+            <div class="reading-details">
+              <span class="reading-label">Soil Moisture</span>
+              <span class="reading-value" [ngClass]="getMoistureClass(latestReading.soil_moisture)">
+                {{ latestReading.soil_moisture }}%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Pump control section -->
+  <div class="card mb-4">
+    <div class="card-header bg-success text-white">
+      <h3 class="mb-0">Pump Control</h3>
+    </div>
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="current-reading">
+            <div class="reading-icon">🚰</div>
+            <div class="reading-details">
+              <span class="reading-label">Pump Status</span>
+              <span class="reading-value" [ngClass]="{'text-success': pumpStatus === 'ON', 'text-secondary': pumpStatus === 'OFF'}">
+                {{ pumpStatus }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 text-end">
+          <button [ngClass]="{'btn-success': pumpStatus === 'OFF', 'btn-danger': pumpStatus === 'ON'}" 
+                  class="btn" (click)="togglePump()">
+            <i class="fas" [ngClass]="{'fa-play': pumpStatus === 'OFF', 'fa-stop': pumpStatus === 'ON'}"></i> 
+            Turn {{ pumpStatus === 'ON' ? 'OFF' : 'ON' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Historical readings section -->
+  <div class="card">
+    <div class="card-header bg-info text-white">
+      <h3 class="mb-0">Recent Readings</h3>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center">
+        <p>Loading readings...</p>
+      </div>
+      <div *ngIf="!loading && deviceReadings.length === 0" class="text-center">
+        <p>No historical readings available</p>
+      </div>
+      <div *ngIf="!loading && deviceReadings.length > 0" class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Device ID</th>
+              <th>Temperature</th>
+              <th>Soil Moisture</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reading of deviceReadings">
+              <td>{{ reading.timestamp | date:'medium' }}</td>
+              <td>{{ reading.device_id || 'Unknown' }}</td>
+              <td [ngClass]="getTemperatureClass(reading.temperature)">{{ reading.temperature }}°C</td>
+              <td [ngClass]="getMoistureClass(reading.soil_moisture)">{{ reading.soil_moisture }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

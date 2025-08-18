@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 
@@ -10,13 +10,15 @@ export interface IrrigationEvent {
   duration_minutes: number;
   water_consumed_liters: number;
   notes?: string;
+  device_id?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class IrrigationEventService {
-  private apiUrl = environment.apiUrl + '/irrigation-events/';
+  // Updated to match the API endpoints described
+  private apiUrl = environment.apiUrl + '/api/devices/irrigation-events/';
 
   constructor(private http: HttpClient) {
     console.log('IrrigationEventService apiUrl:', this.apiUrl);

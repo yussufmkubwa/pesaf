@@ -21,11 +21,11 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(credentials: { username: string, password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/login/`, credentials);
+    return this.http.post(`${this.apiUrl}/api/auth/login/`, credentials);
   }
 
   getMe(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/api/me/`);
+    return this.http.get<User>(`${this.apiUrl}/me/`);
   }
 
   setTokens(tokens: { access: string, refresh: string }) {

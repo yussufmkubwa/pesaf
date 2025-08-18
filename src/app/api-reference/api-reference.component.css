@@ -1,0 +1,100 @@
+.api-reference {
+  padding: 2rem 0;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+h2 {
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+  color: #3498db;
+}
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.endpoint {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.endpoint:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.endpoint-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.endpoint-url {
+  margin: 0 1rem;
+  padding: 0.25rem 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.endpoint-name {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.endpoint-description {
+  padding-left: 0.5rem;
+}
+
+.badge {
+  padding: 0.5rem 0.75rem;
+}
+
+pre {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+code {
+  color: #e83e8c;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.table {
+  margin-bottom: 2rem;
+}
+
+.table-sm td,
+.table-sm th {
+  padding: 0.5rem;
+}
+
+.lead {
+  font-size: 1.15rem;
+  margin-bottom: 2rem;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-primary {
+  background-color: #007bff !important;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-color: #bee5eb;
+}

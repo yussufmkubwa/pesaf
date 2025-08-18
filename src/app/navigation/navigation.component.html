@@ -45,6 +45,11 @@
           👥 <span>User Management</span>
         </a>
       </li>
+      <li role="none" *ngIf="isAdmin()">
+        <a routerLink="api-reference" routerLinkActive="active" role="menuitem">
+          📘 <span>API Reference</span>
+        </a>
+      </li>
     </ul>
 
     <div class="logout-section">

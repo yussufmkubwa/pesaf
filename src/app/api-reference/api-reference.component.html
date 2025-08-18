@@ -1,0 +1,229 @@
+<div class="container api-reference">
+  <h1>API Reference Guide</h1>
+  <p class="lead">
+    This guide provides documentation for all API endpoints used to integrate with IoT devices
+    and retrieve data for the Smart Irrigation dashboard.
+  </p>
+
+  <div class="alert alert-info">
+    <strong>Note:</strong> Authenticated endpoints require a valid JWT token in the Authorization header:
+    <code>Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...</code>
+  </div>
+
+  <h2 id="device-readings">Device Reading APIs (Sensor Data)</h2>
+  <div class="card mb-4">
+    <div class="card-body">
+      <p>These endpoints allow the frontend to get temperature and soil moisture readings from IoT devices.</p>
+      
+      <div *ngFor="let endpoint of deviceReadingEndpoints" class="endpoint">
+        <div class="endpoint-header">
+          <span class="badge" [ngClass]="{'bg-success': endpoint.method === 'GET', 'bg-primary': endpoint.method === 'POST'}">
+            {{ endpoint.method }}
+          </span>
+          <code class="endpoint-url">{{ endpoint.endpoint }}</code>
+          <span class="endpoint-name">{{ endpoint.name }}</span>
+        </div>
+        
+        <div class="endpoint-description">
+          <p>{{ endpoint.description }}</p>
+          
+          <div *ngIf="endpoint.fields">
+            <h5>Response Fields:</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let field of endpoint.fields">
+                  <td><code>{{ field.name }}</code></td>
+                  <td>{{ field.type }}</td>
+                  <td>{{ field.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div *ngIf="endpoint.requestBody">
+            <h5>Request Body:</h5>
+            <pre><code>{{ endpoint.requestBody | json }}</code></pre>
+          </div>
+          
+          <div *ngIf="endpoint.response && isObject(endpoint.response)">
+            <h5>Response:</h5>
+            <pre><code>{{ endpoint.response | json }}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="pump-control">Pump Control APIs (Pump Status)</h2>
+  <div class="card mb-4">
+    <div class="card-body">
+      <p>These endpoints provide pump status information and allow control of irrigation pumps.</p>
+      
+      <div *ngFor="let endpoint of pumpControlEndpoints" class="endpoint">
+        <div class="endpoint-header">
+          <span class="badge" [ngClass]="{'bg-success': endpoint.method === 'GET', 'bg-primary': endpoint.method === 'POST'}">
+            {{ endpoint.method }}
+          </span>
+          <code class="endpoint-url">{{ endpoint.endpoint }}</code>
+          <span class="endpoint-name">{{ endpoint.name }}</span>
+        </div>
+        
+        <div class="endpoint-description">
+          <p>{{ endpoint.description }}</p>
+          
+          <div *ngIf="endpoint.fields">
+            <h5>Response Fields:</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let field of endpoint.fields">
+                  <td><code>{{ field.name }}</code></td>
+                  <td>{{ field.type }}</td>
+                  <td>{{ field.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div *ngIf="endpoint.requestBody">
+            <h5>Request Body:</h5>
+            <pre><code>{{ endpoint.requestBody | json }}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="irrigation-events">Irrigation Event APIs</h2>
+  <div class="card mb-4">
+    <div class="card-body">
+      <p>These endpoints provide data about irrigation events and history.</p>
+      
+      <div *ngFor="let endpoint of irrigationEventEndpoints" class="endpoint">
+        <div class="endpoint-header">
+          <span class="badge" [ngClass]="{'bg-success': endpoint.method === 'GET', 'bg-primary': endpoint.method === 'POST'}">
+            {{ endpoint.method }}
+          </span>
+          <code class="endpoint-url">{{ endpoint.endpoint }}</code>
+          <span class="endpoint-name">{{ endpoint.name }}</span>
+        </div>
+        
+        <div class="endpoint-description">
+          <p>{{ endpoint.description }}</p>
+          
+          <div *ngIf="endpoint.fields">
+            <h5>Response Fields:</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let field of endpoint.fields">
+                  <td><code>{{ field.name }}</code></td>
+                  <td>{{ field.type }}</td>
+                  <td>{{ field.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div *ngIf="endpoint.requestBody">
+            <h5>Request Body:</h5>
+            <pre><code>{{ endpoint.requestBody | json }}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <h2 id="authentication">Authentication APIs</h2>
+  <div class="card mb-4">
+    <div class="card-body">
+      <p>Authentication endpoints for getting JWT tokens.</p>
+      
+      <div *ngFor="let endpoint of authEndpoints" class="endpoint">
+        <div class="endpoint-header">
+          <span class="badge bg-primary">{{ endpoint.method }}</span>
+          <code class="endpoint-url">{{ endpoint.endpoint }}</code>
+          <span class="endpoint-name">{{ endpoint.name }}</span>
+        </div>
+        
+        <div class="endpoint-description">
+          <p>{{ endpoint.description }}</p>
+          
+          <div *ngIf="endpoint.requestBody">
+            <h5>Request Body:</h5>
+            <pre><code>{{ endpoint.requestBody | json }}</code></pre>
+          </div>
+          
+          <div *ngIf="endpoint.response">
+            <h5>Response:</h5>
+            <pre><code>{{ endpoint.response | json }}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <h2 id="integration-guide">Integration Guide</h2>
+  <div class="card">
+    <div class="card-body">
+      <h4>For Frontend Applications</h4>
+      <ol>
+        <li>
+          <strong>Authentication:</strong>
+          <p>Call <code>POST /api/auth/login/</code> to get JWT tokens</p>
+          <p>Store the tokens securely (e.g., in localStorage)</p>
+          <p>Include the access token in all authenticated requests: <code>Authorization: Bearer TOKEN</code></p>
+        </li>
+        <li>
+          <strong>Device Readings:</strong>
+          <p>Call <code>GET /api/devices/readings/</code> to get sensor data</p>
+          <p>Display temperature and moisture data in charts or gauges</p>
+          <p>Implement polling to refresh data periodically</p>
+        </li>
+        <li>
+          <strong>Pump Control:</strong>
+          <p>Call <code>GET /api/devices/pump-control/</code> to get current pump status</p>
+          <p>Call <code>POST /api/devices/pump-control/</code> to turn pumps on/off</p>
+        </li>
+        <li>
+          <strong>Irrigation History:</strong>
+          <p>Call <code>GET /api/devices/irrigation-events/</code> to get irrigation history</p>
+          <p>Display in tables or charts for reporting</p>
+        </li>
+      </ol>
+      
+      <h4>For IoT Devices</h4>
+      <ol>
+        <li>
+          <strong>Sending Sensor Data:</strong>
+          <p>Send data to <code>POST /api/iot/readings/</code></p>
+          <p>Include <code>temperature</code>, <code>soil_moisture</code>, and <code>device_id</code> in the request</p>
+        </li>
+        <li>
+          <strong>Checking for Control Commands:</strong>
+          <p>Poll <code>GET /api/iot/pump-control/</code> periodically</p>
+          <p>Act on the <code>status</code> field to turn pumps on or off</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

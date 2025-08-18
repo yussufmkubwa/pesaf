@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { ApiReferenceComponent } from './api-reference/api-reference.component';
 import { DashboardRedirectGuard } from './dashboard-redirect.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { IrrigationComponent } from './irrigation/irrigation.component';
@@ -27,7 +28,8 @@ export const routes: Routes = [
       { path: 'notifications', component: NotificationsComponent },
       { path: 'reports', component: ReportsComponent },
       { path: 'settings', component: SettingsComponent },
-      { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { role: 'admin' } }
+      { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { role: 'admin' } },
+      { path: 'api-reference', component: ApiReferenceComponent, canActivate: [RoleGuard], data: { role: 'admin' } }
     ]
   }
 ];

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { PumpControlService } from '../pump-control.service';
 
 @Component({
@@ -15,8 +15,10 @@ export class PumpControlComponent implements OnInit {
   constructor(private pumpControlService: PumpControlService) { }
 
   ngOnInit(): void {
-    this.pumpControlService.getPumpStatus().subscribe(status => {
-      this.pumpStatus = status.status;
+    this.pumpControlService.getPumpStatus().subscribe(statusList => {
+      if (statusList && statusList.length > 0) {
+        this.pumpStatus = statusList[0].status;
+      }
     });
   }
 
