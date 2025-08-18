@@ -3,7 +3,7 @@
     <h2 class="my-4">User Management</h2>
 
     <div class="col-12 mb-3">
-      <button type="button" (click)="addUser()" class="btn btn-success">
+      <button type="button" (click)="openModal()" class="btn btn-success">
         <i class="fas fa-plus"></i> Add New User
       </button>
     </div>
@@ -51,89 +51,98 @@
   </div>
 </div>
 
-<div class="form-container" *ngIf="showForm">
-  <h3>{{ data ? 'Update User' : 'Add New User' }}</h3>
-  <hr class="py-2" />
+<!-- User Modal -->
+<div class="modal fade" #userModal tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">{{ data ? 'Update User' : 'Add New User' }}</h5>
+        <button type="button" class="btn-close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userForm" class="row g-3">
+          <div class="col-md-4">
+            <label for="username" class="form-label">Username*</label>
+            <input type="text" class="form-control" id="username" formControlName="username" />
+            <div class="form-error" *ngIf="isInvalid('username')">
+              Username is required
+            </div>
+          </div>
 
-  <form [formGroup]="userForm" class="row g-3">
-    <div class="col-md-4">
-      <label for="username" class="form-label">Username*</label>
-      <input type="text" class="form-control" id="username" formControlName="username" />
-      <div class="form-error" *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
-        Username is required
+          <div class="col-md-4">
+            <label for="first_name" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="first_name" formControlName="first_name" />
+          </div>
+
+          <div class="col-md-4">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="last_name" formControlName="last_name" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email Address*</label>
+            <input type="email" class="form-control" id="email" formControlName="email" />
+            <div class="form-error" *ngIf="isInvalid('email')">
+              Valid email is required
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="!data">
+            <label for="password" class="form-label">Password*</label>
+            <input type="password" class="form-control" id="password" formControlName="password" />
+            <div class="form-error" *ngIf="isInvalid('password')">
+              Password is required for new users
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="address" formControlName="address" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="phone_number" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone_number" formControlName="phone_number" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="role" class="form-label">Role*</label>
+            <select class="form-control" id="role" formControlName="role">
+              <option value="">Select Role</option>
+              <option value="admin">Admin</option>
+              <option value="farmer">Farmer</option>
+            </select>
+            <div class="form-error" *ngIf="isInvalid('role')">
+              Role is required
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button
+          type="button"
+          *ngIf="!data"
+          (click)="addUser()"
+          class="btn btn-success"
+          [disabled]="userForm.invalid"
+        >
+          <i class="fas fa-save"></i> Add User
+        </button>
+        <button
+          type="button"
+          *ngIf="data"
+          (click)="updateUser()"
+          class="btn btn-primary"
+          [disabled]="userForm.invalid"
+        >
+          <i class="fas fa-save"></i> Update User
+        </button>
       </div>
     </div>
-
-    <div class="col-md-4">
-      <label for="first_name" class="form-label">First Name</label>
-      <input type="text" class="form-control" id="first_name" formControlName="first_name" />
-    </div>
-
-    <div class="col-md-4">
-      <label for="last_name" class="form-label">Last Name</label>
-      <input type="text" class="form-control" id="last_name" formControlName="last_name" />
-    </div>
-
-    <div class="col-md-6">
-      <label for="email" class="form-label">Email Address*</label>
-      <input type="email" class="form-control" id="email" formControlName="email" />
-      <div class="form-error" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
-        Valid email is required
-      </div>
-    </div>
-
-    <div class="col-md-6" *ngIf="!data">
-      <label for="password" class="form-label">Password*</label>
-      <input type="password" class="form-control" id="password" formControlName="password" />
-      <div class="form-error" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
-        Password is required for new users
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <label for="address" class="form-label">Address</label>
-      <input type="text" class="form-control" id="address" formControlName="address" />
-    </div>
-
-    <div class="col-md-6">
-      <label for="phone_number" class="form-label">Phone Number</label>
-      <input type="text" class="form-control" id="phone_number" formControlName="phone_number" />
-    </div>
-
-    <div class="col-md-6">
-      <label for="role" class="form-label">Role*</label>
-      <select class="form-control" id="role" formControlName="role">
-        <option value="">Select Role</option>
-        <option value="admin">Admin</option>
-        <option value="farmer">Farmer</option>
-      </select>
-      <div class="form-error" *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched">
-        Role is required
-      </div>
-    </div>
-
-    <div class="col-12 mt-4 form-buttons">
-      <button type="button" class="btn btn-secondary" (click)="close()">
-        <i class="fas fa-times"></i> Cancel
-      </button>
-      <button
-        type="submit"
-        *ngIf="!data"
-        (click)="addUser()"
-        class="btn btn-success"
-        [disabled]="userForm.invalid"
-      >
-        <i class="fas fa-save"></i> Add User
-      </button>
-      <button
-        type="submit"
-        *ngIf="data"
-        (click)="updateUser()"
-        class="btn btn-primary"
-        [disabled]="userForm.invalid"
-      >
-        <i class="fas fa-save"></i> Update User
-      </button>
-    </div>
-  </form>
+  </div>
 </div>
