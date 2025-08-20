@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Irrigation Pump Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .title {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sensor-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sensor-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .sensor-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .pump-control {
+            margin: 30px 0;
+        }
+
+        .pump-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+        }
+
+        .pump-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .pump-button.pump-on {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+
+        .pump-button.pump-processing {
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .auto-mode {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .status-display {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-text {
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .status-error {
+            color: #ff6b6b;
+        }
+
+        .status-success {
+            color: #4CAF50;
+        }
+
+        .threshold-control {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .threshold-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 80px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .threshold-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .last-update {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-top: 20px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .processing {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🌱 Smart Irrigation</h1>
+        <p class="subtitle">Advanced Pump Control System</p>
+
+        <div class="sensor-grid">
+            <div class="sensor-card">
+                <div class="sensor-label">🌡️ Temperature</div>
+                <div class="sensor-value" id="temperature">--°C</div>
+            </div>
+            <div class="sensor-card">
+                <div class="sensor-label">💧 Soil Moisture</div>
+                <div class="sensor-value" id="soilMoisture">--%</div>
+            </div>
+        </div>
+
+        <div class="auto-mode">
+            <span>🤖 Auto Mode:</span>
+            <div class="toggle-switch" id="autoToggle">
+                <div class="toggle-slider"></div>
+            </div>
+            <span>Temp ≥</span>
+            <input type="number" id="tempThreshold" class="threshold-input" value="37" min="0" max="50">
+            <span>°C</span>
+        </div>
+
+        <div class="pump-control">
+            <button class="pump-button" id="pumpButton">💧 Pump OFF</button>
+        </div>
+
+        <div class="status-display">
+            <div class="status-text" id="statusText">System Ready</div>
+        </div>
+
+        <div class="last-update" id="lastUpdate">Last update: Never</div>
+    </div>
+
+    <script>
+        // Blynk Cloud API Configuration
+        const BLYNK_TOKEN = 'oM1I_kX96wCPnfZe5vM8xTmzy84hW65p';
+        const BLYNK_BASE_URL = 'https://blynk.cloud/external/api';
+        
+        // Virtual Pins
+        const PINS = {
+            TEMPERATURE: 'V0',
+            SOIL_MOISTURE: 'V1', 
+            PUMP_CONTROL: 'V2'
+        };
+
+        // System State
+        let pumpRunning = false;
+        let processingSequence = false;
+        let autoModeEnabled = true;
+        let tempThreshold = 37;
+        let lastClickTime = 0;
+        
+        // Constants
+        const DEBOUNCE_DELAY = 1000;
+        const UPDATE_INTERVAL = 5000;
+        const SEQUENCE_DELAY = 500;
+
+        // DOM Elements
+        const temperatureEl = document.getElementById('temperature');
+        const soilMoistureEl = document.getElementById('soilMoisture');
+        const pumpButtonEl = document.getElementById('pumpButton');
+        const autoToggleEl = document.getElementById('autoToggle');
+        const tempThresholdEl = document.getElementById('tempThreshold');
+        const statusTextEl = document.getElementById('statusText');
+        const lastUpdateEl = document.getElementById('lastUpdate');
+
+        // Utility Functions
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function setStatus(message, isError = false) {
+            statusTextEl.textContent = message;
+            statusTextEl.className = `status-text ${isError ? 'status-error' : 'status-success'}`;
+            
+            // Auto-clear status after 5 seconds
+            setTimeout(() => {
+                if (statusTextEl.textContent === message) {
+                    statusTextEl.textContent = 'System Ready';
+                    statusTextEl.className = 'status-text';
+                }
+            }, 5000);
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            lastUpdateEl.textContent = `Last update: ${now.toLocaleTimeString()}`;
+        }
+
+        function updatePumpButton() {
+            if (processingSequence) {
+                pumpButtonEl.textContent = '⏳ Processing...';
+                pumpButtonEl.className = 'pump-button pump-processing processing';
+                pumpButtonEl.disabled = true;
+            } else {
+                pumpButtonEl.textContent = pumpRunning ? '💧 Pump ON' : '💧 Pump OFF';
+                pumpButtonEl.className = pumpRunning ? 'pump-button pump-on' : 'pump-button pump-off';
+                pumpButtonEl.disabled = false;
+            }
+        }
+
+        // Blynk API Functions
+        async function sendPumpCommand(value) {
+            const url = `${BLYNK_BASE_URL}/update?token=${BLYNK_TOKEN}&${PINS.PUMP_CONTROL}=${value}`;
+            
+            try {
+                const response = await fetch(url, { method: 'GET' });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.text();
+            } catch (error) {
+                console.error('Error sending pump command:', error);
+                throw error;
+            }
+        }
+
+        async function fetchSensorData() {
+            try {
+                // Fetch temperature
+                const tempResponse = await fetch(`${BLYNK_BASE_URL}/get?token=${BLYNK_TOKEN}&${PINS.TEMPERATURE}`);
+                if (!tempResponse.ok) throw new Error(`Temperature fetch failed: ${tempResponse.status}`);
+                const tempValue = parseFloat(await tempResponse.text()) || 0;
+
+                // Fetch soil moisture
+                const soilResponse = await fetch(`${BLYNK_BASE_URL}/get?token=${BLYNK_TOKEN}&${PINS.SOIL_MOISTURE}`);
+                if (!soilResponse.ok) throw new Error(`Soil moisture fetch failed: ${soilResponse.status}`);
+                const soilValue = parseFloat(await soilResponse.text()) || 0;
+
+                return {
+                    temperature: tempValue,
+                    soilMoisture: soilValue
+                };
+            } catch (error) {
+                console.error('Error fetching sensor data:', error);
+                throw error;
+            }
+        }
+
+        async function getPumpState() {
+            try {
+                const response = await fetch(`${BLYNK_BASE_URL}/get?token=${BLYNK_TOKEN}&${PINS.PUMP_CONTROL}`);
+                if (!response.ok) throw new Error(`Pump state fetch failed: ${response.status}`);
+                const value = parseInt(await response.text()) || 0;
+                return value;
+            } catch (error) {
+                console.error('Error getting pump state:', error);
+                throw error;
+            }
+        }
+
+        // Pump Control Sequences
+        async function startPumpSequence() {
+            setStatus('🔄 Starting pump: OFF → ON → OFF');
+            
+            try {
+                // Step 1: Ensure OFF state
+                await sendPumpCommand(0);
+                await delay(SEQUENCE_DELAY);
+
+                // Step 2: Turn ON
+                await sendPumpCommand(1);
+                await delay(SEQUENCE_DELAY);
+
+                // Step 3: Turn OFF (pump should now be running)
+                await sendPumpCommand(0);
+                
+                pumpRunning = true;
+                setStatus('✅ Pump started successfully!');
+                updatePumpButton();
+
+            } catch (error) {
+                setStatus('❌ Failed to start pump', true);
+                throw error;
+            }
+        }
+
+        async function stopPumpSequence() {
+            setStatus('🔄 Stopping pump: OFF → ON');
+            
+            try {
+                // Step 1: Ensure OFF state
+                await sendPumpCommand(0);
+                await delay(SEQUENCE_DELAY);
+
+                // Step 2: Turn ON (this stops the pump)
+                await sendPumpCommand(1);
+                
+                pumpRunning = false;
+                setStatus('🛑 Pump stopped successfully!');
+                updatePumpButton();
+
+            } catch (error) {
+                setStatus('❌ Failed to stop pump', true);
+                throw error;
+            }
+        }
+
+        async function autoStartPump() {
+            if (processingSequence) return;
+
+            processingSequence = true;
+            updatePumpButton();
+
+            try {
+                // Execute the same OFF → ON → OFF sequence automatically
+                await startPumpSequence();
+                setStatus('🤖 Auto pump activated - Temperature control active');
+            } catch (error) {
+                console.error('Auto pump start error:', error);
+                setStatus('❌ Error with automatic pump start', true);
+            } finally {
+                processingSequence = false;
+                updatePumpButton();
+            }
+        }
+
+        // Main Control Functions
+        async function togglePump() {
+            const currentTime = Date.now();
+
+            // Debounce protection
+            if (currentTime - lastClickTime < DEBOUNCE_DELAY) {
+                setStatus('⏳ Please wait before clicking again...');
+                return;
+            }
+            lastClickTime = currentTime;
+
+            // Prevent multiple operations
+            if (processingSequence) {
+                setStatus('⏳ Processing previous command...');
+                return;
+            }
+
+            processingSequence = true;
+            updatePumpButton();
+
+            try {
+                if (!pumpRunning) {
+                    await startPumpSequence();
+                } else {
+                    await stopPumpSequence();
+                }
+            } catch (error) {
+                console.error('Pump control error:', error);
+                setStatus('❌ Error controlling pump', true);
+            } finally {
+                processingSequence = false;
+                updatePumpButton();
+            }
+        }
+
+        async function updateSensorData() {
+            try {
+                const sensorData = await fetchSensorData();
+                const tempValue = sensorData.temperature;
+                const soilValue = sensorData.soilMoisture;
+
+                // Update UI
+                temperatureEl.textContent = `${tempValue}°C`;
+                soilMoistureEl.textContent = `${soilValue}%`;
+                updateLastUpdateTime();
+
+                // Check pump status using direct API
+                const pumpState = await getPumpState();
+                pumpRunning = pumpState === 1;
+                updatePumpButton();
+
+                // Auto mode check: If temperature ≥ threshold, automatically start pump
+                if (autoModeEnabled && tempValue >= tempThreshold && 
+                    !pumpRunning && !processingSequence) {
+                    setStatus(`🌡️ Auto Mode: Temperature ${tempValue}°C ≥ ${tempThreshold}°C! Auto-starting pump...`);
+                    await autoStartPump();
+                } else if (!processingSequence) {
+                    setStatus('Monitoring data updated');
+                }
+
+            } catch (error) {
+                console.error('Error updating sensor data:', error);
+                setStatus('❌ Error fetching sensor data', true);
+            }
+        }
+
+        function toggleAutoMode() {
+            autoModeEnabled = !autoModeEnabled;
+            autoToggleEl.classList.toggle('active', autoModeEnabled);
+            setStatus(`🤖 Auto mode ${autoModeEnabled ? 'enabled' : 'disabled'}`);
+        }
+
+        function updateThreshold() {
+            tempThreshold = parseInt(tempThresholdEl.value) || 37;
+            setStatus(`🌡️ Temperature threshold updated to ${tempThreshold}°C`);
+        }
+
+        // Initialize System
+        async function initializeSystem() {
+            setStatus('🚀 Initializing Smart Irrigation System...');
+            
+            try {
+                // Set initial auto mode state
+                autoToggleEl.classList.add('active');
+                
+                // Initial data fetch
+                await updateSensorData();
+                setStatus('✅ System initialized successfully!');
+                
+                // Start regular updates
+                setInterval(updateSensorData, UPDATE_INTERVAL);
+                
+            } catch (error) {
+                setStatus('❌ Failed to initialize system', true);
+                console.error('System initialization error:', error);
+            }
+        }
+
+        // Event Listeners
+        pumpButtonEl.addEventListener('click', togglePump);
+        autoToggleEl.addEventListener('click', toggleAutoMode);
+        tempThresholdEl.addEventListener('change', updateThreshold);
+        tempThresholdEl.addEventListener('input', updateThreshold);
+
+        // Start the system
+        document.addEventListener('DOMContentLoaded', initializeSystem);
+
+        // Expose functions for debugging
+        window.smartIrrigation = {
+            togglePump,
+            updateSensorData,
+            toggleAutoMode,
+            sendPumpCommand,
+            fetchSensorData,
+            getPumpState,
+            startPumpSequence,
+            stopPumpSequence
+        };
+    </script>
+</body>
+</html>

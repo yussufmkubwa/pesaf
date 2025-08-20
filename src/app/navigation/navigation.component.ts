@@ -16,15 +16,25 @@ export class NavigationComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+    // Check if user is logged in
+    if (!this.authService.isLoggedIn()) {
+      console.log('User not logged in, redirecting to login');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     // First check if we have the role in localStorage
-    this.userRole = localStorage.getItem('userRole');
+    this.userRole = this.authService.getUserRole();
+    console.log(`Navigation - Current user role: ${this.userRole}`);
     
     // If we have an access token but no role, try to get it from the API
-    if (localStorage.getItem('accessToken') && !this.userRole) {
+    if (this.authService.isLoggedIn() && !this.userRole) {
+      console.log('No role found, fetching from API');
       this.authService.getMe().subscribe({
         next: (user) => {
           this.userRole = user.role;
           localStorage.setItem('userRole', user.role);
+          console.log(`Role fetched from API: ${user.role}`);
         },
         error: (error) => {
           console.error('Failed to get user info in navigation', error);
@@ -34,21 +44,21 @@ export class NavigationComponent implements OnInit {
           }
         }
       });
-    } else if (!localStorage.getItem('accessToken')) {
-      // No token, redirect to login
-      this.router.navigate(['/login']);
     }
   }
 
   isAdmin(): boolean {
-    // Get the latest value directly from localStorage
-    return localStorage.getItem('userRole') === 'admin';
+    // Get the latest value directly from authService
+    return this.authService.isAdmin();
+  }
+
+  isFarmer(): boolean {
+    return this.authService.isFarmer();
   }
 
   logout() {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userRole');
+    console.log('Logging out user');
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

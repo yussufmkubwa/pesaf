@@ -40,8 +40,9 @@ export interface BlynkTemperatureData {
   providedIn: 'root'
 })
 export class BlynkService {
-  // Direct Blynk Cloud API via proxy
+  // Direct Blynk Cloud API configuration
   private BLYNK_TOKEN = "oM1I_kX96wCPnfZe5vM8xTmzy84hW65p";
+  private BLYNK_BASE_URL = "https://ny3.blynk.cloud/external/api";
   private BLYNK_BASE = "/blynk"; // Proxy route defined in proxy.conf.json
   
   // Virtual Pin Mapping
@@ -49,7 +50,62 @@ export class BlynkService {
   private readonly V_SOIL_MOISTURE = "V1";
   private readonly V_PUMP_STATUS = "V2";
 
+  // API endpoints for direct access
+  private endpoints = {
+    temperature: `${this.BLYNK_BASE_URL}/get?token=${this.BLYNK_TOKEN}&pin=${this.V_TEMPERATURE}`,
+    soilMoisture: `${this.BLYNK_BASE_URL}/get?token=${this.BLYNK_TOKEN}&pin=${this.V_SOIL_MOISTURE}`,
+    pumpControl: `${this.BLYNK_BASE_URL}/update?token=${this.BLYNK_TOKEN}&pin=${this.V_PUMP_STATUS}&value=`,
+    pumpState: `${this.BLYNK_BASE_URL}/get?token=${this.BLYNK_TOKEN}&pin=${this.V_PUMP_STATUS}`
+  };
+
   constructor(private http: HttpClient) { }
+
+  // Direct Blynk API methods (like the original JavaScript)
+  async sendPumpCommand(value: number): Promise<boolean> {
+    try {
+      const response = await fetch(this.endpoints.pumpControl + value);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      console.log(`Pump command sent: ${value}`);
+      return true;
+    } catch (error) {
+      console.error(`Failed to send pump command ${value}:`, error);
+      throw error;
+    }
+  }
+
+  async fetchSensorDataDirect(): Promise<{ temperature: number, soilMoisture: number }> {
+    try {
+      // Fetch temperature and soil moisture using direct API calls
+      const [tempResponse, soilResponse] = await Promise.all([
+        fetch(this.endpoints.temperature),
+        fetch(this.endpoints.soilMoisture)
+      ]);
+
+      const temperature = await tempResponse.text();
+      const soilMoisture = await soilResponse.text();
+
+      return {
+        temperature: parseFloat(temperature) || 0,
+        soilMoisture: parseFloat(soilMoisture) || 0
+      };
+    } catch (error) {
+      console.error("Error fetching sensor data:", error);
+      throw error;
+    }
+  }
+
+  async getPumpStateDirect(): Promise<number> {
+    try {
+      const response = await fetch(this.endpoints.pumpState);
+      const state = await response.text();
+      return parseInt(state) || 0;
+    } catch (error) {
+      console.error("Error fetching pump state:", error);
+      return 0;
+    }
+  }
   
   // Get value from Blynk virtual pin
   private getBlynkPinValue(vpin: string): Observable<any> {

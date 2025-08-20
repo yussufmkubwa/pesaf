@@ -1,13 +1,49 @@
-<div class="dashboard">
-  <h2>Smart Farming</h2>
+<div class="dashboard-container">
+  <div class="dashboard">
+    <h1>{{ dashboardTitle }}</h1>
+    
+    <div class="sensor-grid">
+      <div class="sensor-card temperature-card">
+        <div class="sensor-icon">🌡️</div>
+        <div class="sensor-label">Temperature</div>
+        <div class="sensor-value">{{ temperature }}°C</div>
+      </div>
+      
+      <div class="sensor-card soil-card">
+        <div class="sensor-icon">💧</div>
+        <div class="sensor-label">Soil Moisture</div>
+        <div class="sensor-value">{{ soilMoisture }}%</div>
+      </div>
+    </div>
 
-  <div class="card" id="temp">🌡 Temperature: {{ temperature }} °C</div>
-  <div class="card" id="soil">🌱 Soil Moisture: {{ soilMoisture }} %</div>
+    <div *ngIf="showAutoMode" class="auto-mode">
+      🤖 Auto Mode: ON (Activates at {{ tempThreshold }}°C)
+    </div>
 
-  <div class="btn-group">
-    <button class="on" [disabled]="isPumpOn" (click)="pumpControl(1)">Pump ON</button>
-    <button class="off" [disabled]="!isPumpOn" (click)="pumpControl(0)">Pump OFF</button>
+    <div *ngIf="isAdmin" class="admin-info">
+      👑 Admin View - Full System Access
+    </div>
+
+    <div *ngIf="canControlPump" class="pump-control">
+      <button 
+        [class]="pumpButtonClass" 
+        [disabled]="processingSequence"
+        (click)="togglePump()">
+        {{ pumpButtonText }}
+      </button>
+    </div>
+
+    <div *ngIf="!canControlPump" class="view-only-notice">
+      👀 View Only Mode - Contact administrator for pump control
+    </div>
+
+    <div class="status-panel">
+      <div [class]="'status-text' + (isError ? ' error' : '')">{{ statusText }}</div>
+    </div>
+
+    <div class="footer">
+      <div>⚡ Powered by Blynk Cloud</div>
+      <div class="last-update">Last updated: {{ lastUpdate }}</div>
+    </div>
   </div>
-
-  <div class="footer">Powered by Blynk Cloud</div>
 </div>

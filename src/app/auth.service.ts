@@ -76,7 +76,12 @@ export class AuthService {
   }
   
   getUserRole(): string {
-    return localStorage.getItem('userRole') || 'farmer'; // Default to farmer if not set
+    const role = localStorage.getItem('userRole');
+    if (!role) {
+      console.warn('No user role found in localStorage');
+      return 'farmer'; // Default to farmer if not set
+    }
+    return role;
   }
   
   isAdmin(): boolean {
@@ -87,7 +92,12 @@ export class AuthService {
     return this.getUserRole() === 'farmer';
   }
   
+  hasRole(role: string): boolean {
+    return this.getUserRole() === role;
+  }
+  
   private setUserRole(role: string): void {
+    console.log(`Setting user role to: ${role}`);
     localStorage.setItem('userRole', role);
   }
   

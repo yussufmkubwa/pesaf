@@ -1,49 +1,128 @@
-<div class="container">
-  <h2>User Management</h2>
+<div class="admin-dashboard-container">
+  <!-- Smart Farming Control Panel -->
+  <div class="dashboard-section">
+    <div class="dashboard">
+      <h1>👑 Admin Smart Farming Control</h1>
+      
+      <div class="sensor-grid">
+        <div class="sensor-card temperature-card">
+          <div class="sensor-icon">🌡️</div>
+          <div class="sensor-label">Temperature</div>
+          <div class="sensor-value">{{ temperature }}°C</div>
+        </div>
+        
+        <div class="sensor-card soil-card">
+          <div class="sensor-icon">�</div>
+          <div class="sensor-label">Soil Moisture</div>
+          <div class="sensor-value">{{ soilMoisture }}%</div>
+        </div>
+      </div>
 
-  <div class="form-container">
-    <h3>Add New Farmer</h3>
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input id="username" formControlName="username" class="form-control">
+      <div class="auto-mode">
+        🤖 Auto Mode: ON (Activates at {{ tempThreshold }}°C)
       </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input id="email" formControlName="email" class="form-control">
+
+      <div class="pump-control">
+        <button 
+          [class]="pumpButtonClass" 
+          [disabled]="processingSequence"
+          (click)="togglePump()">
+          {{ pumpButtonText }}
+        </button>
       </div>
-      <div class="form-group">
-        <label for="first_name">First Name</label>
-        <input id="first_name" formControlName="first_name" class="form-control">
+
+      <div class="status-panel">
+        <div [class]="'status-text' + (isError ? ' error' : '')">{{ statusText }}</div>
       </div>
-      <div class="form-group">
-        <label for="last_name">Last Name</label>
-        <input id="last_name" formControlName="last_name" class="form-control">
+
+      <div class="footer">
+        <div>⚡ Powered by Blynk Cloud</div>
+        <div class="last-update">Last updated: {{ lastUpdate }}</div>
       </div>
-      <button type="submit" [disabled]="!userForm.valid" class="btn btn-primary">Add User</button>
-    </form>
+    </div>
   </div>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Role</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.id }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.first_name }}</td>
-        <td>{{ user.last_name }}</td>
-        <td>{{ user.role }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- User Management Section -->
+  <div class="user-management-section">
+    <div class="container">
+      <h2>👥 User Management</h2>
+
+      <div class="form-container">
+        <h3>👥 Add New User</h3>
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input id="username" formControlName="username" class="form-control" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" formControlName="email" class="form-control" placeholder="Enter email">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first_name">First Name</label>
+              <input id="first_name" formControlName="first_name" class="form-control" placeholder="First name">
+            </div>
+            <div class="form-group">
+              <label for="last_name">Last Name</label>
+              <input id="last_name" formControlName="last_name" class="form-control" placeholder="Last name">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" formControlName="role" class="form-control">
+              <option value="farmer">Farmer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <button type="submit" [disabled]="!userForm.valid" class="btn btn-primary">
+            🔒 Add User
+          </button>
+        </form>
+      </div>
+
+      <div class="table-container">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users; trackBy: trackByUserId">
+              <td>{{ user.id }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.first_name }} {{ user.last_name }}</td>
+              <td>
+                <span [class]="'role-badge ' + (user.role === 'admin' ? 'admin-role' : 'farmer-role')">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-action edit" (click)="editUser(user)">✏️</button>
+                <button class="btn-action delete" (click)="deleteUser(user.id)" 
+                        *ngIf="canDeleteAdmin(user)">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="users.length === 0">
+              <td colspan="6" class="no-data">No users found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
