@@ -1,58 +1,93 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IrrigationEventService, IrrigationEvent } from '../irrigation-event.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { interval, Subscription } from 'rxjs';
+import { BlynkService } from '../blynk.service';
 
 @Component({
   selector: 'app-irrigation',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './irrigation.component.html',
   styleUrl: './irrigation.component.css'
 })
-export class IrrigationComponent implements OnInit {
-  irrigationEvents: IrrigationEvent[] = [];
+export class IrrigationComponent implements OnInit, OnDestroy {
+  temperature: string = '--';
+  soilMoisture: string = '--';
+  isPumpOn: boolean = false;
+  
+  private dataSubscription?: Subscription;
+  private tempUrl = "https://ny3.blynk.cloud/external/api/get?token=oM1I_kX96wCPnfZe5vM8xTmzy84hW65p&pin=V0";
+  private soilUrl = "https://ny3.blynk.cloud/external/api/get?token=oM1I_kX96wCPnfZe5vM8xTmzy84hW65p&pin=V1";
+  private pumpUrl = "https://ny3.blynk.cloud/external/api/update?token=oM1I_kX96wCPnfZe5vM8xTmzy84hW65p&pin=V2&value=";
 
-  constructor(private irrigationEventService: IrrigationEventService) { }
+  constructor(private blynkService: BlynkService) { }
 
   ngOnInit(): void {
-    this.loadIrrigationEvents();
+    // Load data initially
+    this.fetchData();
+    
+    // Set up polling every 5 seconds
+    this.dataSubscription = interval(5000).subscribe(() => {
+      this.fetchData();
+    });
+  }
+  
+  ngOnDestroy(): void {
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 
-  loadIrrigationEvents(): void {
-    this.irrigationEventService.getIrrigationEvents().subscribe({
-      next: (data) => {
-        this.irrigationEvents = data;
-        console.log('Irrigation events loaded:', this.irrigationEvents);
+  fetchData(): void {
+    // Get temperature
+    this.blynkService.getTemperatureValue().subscribe({
+      next: (temp) => {
+        this.temperature = temp.toString();
       },
-      error: (error) => {
-        console.error('Error loading irrigation events:', error);
+      error: (err) => {
+        console.error('Error getting temperature:', err);
+        this.temperature = '--';
+      }
+    });
+
+    // Get soil moisture
+    this.blynkService.getSoilMoistureValue().subscribe({
+      next: (moisture) => {
+        this.soilMoisture = moisture.toString();
+      },
+      error: (err) => {
+        console.error('Error getting soil moisture:', err);
+        this.soilMoisture = '--';
+      }
+    });
+
+    // Get pump status
+    this.blynkService.getPumpStatus().subscribe({
+      next: (status) => {
+        this.isPumpOn = status.pump_status === 1;
+      },
+      error: (err) => {
+        console.error('Error getting pump status:', err);
       }
     });
   }
 
-  // Example of creating an irrigation event
-  createIrrigationEvent(durationMinutes: number, waterConsumedLiters: number, notes?: string): void {
-    const newEvent: IrrigationEvent = { duration_minutes: durationMinutes, water_consumed_liters: waterConsumedLiters, notes };
-    this.irrigationEventService.createIrrigationEvent(newEvent).subscribe({
-      next: (data) => {
-        console.log('Irrigation event created:', data);
-        this.loadIrrigationEvents(); // Refresh the list
+  pumpControl(state: number): void {
+    const status = state === 1;
+    this.blynkService.setPumpStatus(status).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.isPumpOn = response.pump_status === 1;
+          alert(`Pump turned ${this.isPumpOn ? 'ON' : 'OFF'}`);
+        } else {
+          alert('Failed to update pump status');
+        }
       },
-      error: (error) => {
-        console.error('Error creating irrigation event:', error);
-      }
-    });
-  }
-
-  // Example of deleting an irrigation event
-  deleteIrrigationEvent(id: number): void {
-    this.irrigationEventService.deleteIrrigationEvent(id).subscribe({
-      next: () => {
-        console.log('Irrigation event deleted:', id);
-        this.loadIrrigationEvents(); // Refresh the list
-      },
-      error: (error) => {
-        console.error('Error deleting irrigation event:', error);
+      error: (err) => {
+        console.error('Pump control error:', err);
+        alert('Error controlling pump');
       }
     });
   }

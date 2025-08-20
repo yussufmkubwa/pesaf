@@ -1,56 +1,13 @@
-<div class="container-fluid mt-4">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Pump Control
-        </div>
-        <div class="card-body">
-          <app-pump-control></app-pump-control>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Live Sensor Readings
-        </div>
-        <div class="card-body">
-          <app-sensor-readings></app-sensor-readings>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Recent Irrigation History
-        </div>
-        <div class="card-body">
-          <app-irrigation-history></app-irrigation-history>
-        </div>
-      </div>
-    </div>
+<div class="dashboard">
+  <h2>Smart Farming</h2>
+
+  <div class="card" id="temp">🌡 Temperature: {{ temperature }} °C</div>
+  <div class="card" id="soil">🌱 Soil Moisture: {{ soilMoisture }} %</div>
+
+  <div class="btn-group">
+    <button class="on" [disabled]="isPumpOn" (click)="pumpControl(1)">Pump ON</button>
+    <button class="off" [disabled]="!isPumpOn" (click)="pumpControl(0)">Pump OFF</button>
   </div>
-  <div class="row mt-4">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          Soil Moisture Trend (Last 24 hours)
-        </div>
-        <div class="card-body">
-          <app-charts chartType="soilMoisture"></app-charts>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          Water Usage (Last 7 days)
-        </div>
-        <div class="card-body">
-          <app-charts chartType="waterUsage"></app-charts>
-        </div>
-      </div>
-    </div>
-  </div>
+
+  <div class="footer">Powered by Blynk Cloud</div>
 </div>

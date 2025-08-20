@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 export interface PumpControl {
@@ -28,7 +29,16 @@ export class PumpControlService {
 
   // Get latest pump status
   getLatestPumpStatus(): Observable<PumpControl> {
-    return this.http.get<PumpControl>(`${this.apiUrl}latest/`);
+    // The /latest/ endpoint doesn't exist, so let's get the first item from the list
+    return this.http.get<PumpControl[]>(this.apiUrl).pipe(
+      map(pumpControls => {
+        if (pumpControls && pumpControls.length > 0) {
+          return pumpControls[0];
+        }
+        // Return a default value if no pump control data is available
+        return { status: 'OFF', timestamp: new Date().toISOString() };
+      })
+    );
   }
   
   // Set pump status (Web interface)

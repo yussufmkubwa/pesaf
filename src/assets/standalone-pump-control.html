@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Farming Pump Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .dashboard {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 350px;
+      text-align: center;
+    }
+    
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    
+    .card {
+      background: #eef4fb;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #444;
+    }
+    
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    
+    button.on {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    button.on:hover {
+      background: #45a049;
+    }
+    
+    button.off {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    button.off:hover {
+      background: #c0392b;
+    }
+    
+    button.processing {
+      background: #ff9800;
+      color: white;
+      cursor: not-allowed;
+    }
+    
+    .status {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #666;
+      min-height: 20px;
+    }
+    
+    .footer {
+      margin-top: 20px;
+      font-size: 0.85em;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Smart Farming</h2>
+    <div class="card" id="temp">🌡 Temperature: -- °C</div>
+    <div class="card" id="soil">🌱 Soil Moisture: -- %</div>
+    
+    <!-- Toggle Button with special pump control sequence -->
+    <button id="pumpBtn" class="off">Pump OFF</button>
+    <div class="status" id="status">Waiting for sensor data...</div>
+    
+    <div class="footer">Powered by Blynk Cloud</div>
+  </div>
+
+  <script>
+    // Configuration
+    const tempUrl = "https://ny3.blynk.cloud/external/api/get?token=oM1I_kX96wCPnfZe5vM8xTmzy84hW65p&pin=V0";
+    const soilUrl = "https://ny3.blynk.cloud/external/api/get?token=oM1I_kX96wCPnfZe5vM8xTmzy84hW65p&pin=V1";
+    const pumpUrl = "https://ny3.blynk.cloud/external/api/update?token=oM1I_kX96wCPnfZe5vM8xTmzy84hW65p&pin=V2&value=";
+    const pumpStateUrl = "https://ny3.blynk.cloud/external/api/get?token=oM1I_kX96wCPnfZe5vM8xTmzy84hW65p&pin=V2";
+    
+    // State tracking
+    let isPumpRunning = false; // Track actual pump running state
+    let isProcessing = false; // Prevent duplicate clicks during sequences
+    let lastClickTime = 0;
+    const debounceDelay = 1000; // 1 second debounce
+    
+    // Get DOM elements
+    const tempDisplay = document.getElementById("temp");
+    const soilDisplay = document.getElementById("soil");
+    const pumpButton = document.getElementById("pumpBtn");
+    const statusDisplay = document.getElementById("status");
+
+    // Fetch sensor data and update the display
+    async function fetchData() {
+      try {
+        // Fetch temperature
+        const tempResponse = await fetch(tempUrl);
+        const tempData = await tempResponse.text();
+        tempDisplay.innerText = `🌡 Temperature: ${tempData} °C`;
+        
+        // Fetch soil moisture
+        const soilResponse = await fetch(soilUrl);
+        const soilData = await soilResponse.text();
+        soilDisplay.innerText = `🌱 Soil Moisture: ${soilData} %`;
+        
+        // Only sync pump state if we're not in the middle of a sequence
+        if (!isProcessing) {
+          updatePumpButton();
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setStatus("Error fetching sensor data");
+      }
+    }
+
+    // Toggle pump with the special sequence logic
+    async function togglePump() {
+      const currentTime = Date.now();
+      
+      // Debounce clicks
+      if (currentTime - lastClickTime < debounceDelay) {
+        setStatus("Please wait before clicking again...");
+        return;
+      }
+      lastClickTime = currentTime;
+
+      // Prevent multiple clicks during processing
+      if (isProcessing) {
+        setStatus("Processing previous command...");
+        return;
+      }
+
+      isProcessing = true;
+      setButtonProcessing(true);
+
+      try {
+        if (!isPumpRunning) {
+          // START PUMP: Sequence is OFF → ON → OFF
+          await startPumpSequence();
+        } else {
+          // STOP PUMP: Sequence is OFF → ON
+          await stopPumpSequence();
+        }
+      } catch (error) {
+        console.error("Pump control error:", error);
+        setStatus("Error controlling pump");
+      } finally {
+        isProcessing = false;
+        setButtonProcessing(false);
+        updatePumpButton();
+      }
+    }
+
+    // START PUMP sequence: OFF → ON → OFF
+    async function startPumpSequence() {
+      setStatus("Starting pump: OFF → ON → OFF");
+      
+      // Step 1: Ensure OFF state
+      await sendPumpCommand(0);
+      await delay(500);
+      
+      // Step 2: Turn ON
+      await sendPumpCommand(1);
+      await delay(500);
+      
+      // Step 3: Turn OFF (pump should now be running)
+      await sendPumpCommand(0);
+      
+      isPumpRunning = true;
+      setStatus("Pump started successfully");
+    }
+
+    // STOP PUMP sequence: OFF → ON
+    async function stopPumpSequence() {
+      setStatus("Stopping pump: OFF → ON");
+      
+      // Step 1: Ensure OFF state
+      await sendPumpCommand(0);
+      await delay(500);
+      
+      // Step 2: Turn ON (this stops the pump)
+      await sendPumpCommand(1);
+      
+      isPumpRunning = false;
+      setStatus("Pump stopped successfully");
+    }
+
+    // Send a single command to the Blynk API
+    async function sendPumpCommand(value) {
+      try {
+        const response = await fetch(pumpUrl + value);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log(`Pump command sent: ${value}`);
+        return true;
+      } catch (error) {
+        console.error(`Failed to send pump command ${value}:`, error);
+        throw error;
+      }
+    }
+
+    // Utility function for delay
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Update the pump button appearance and text
+    function updatePumpButton() {
+      if (isPumpRunning) {
+        pumpButton.innerText = "Pump ON";
+        pumpButton.className = "on";
+      } else {
+        pumpButton.innerText = "Pump OFF";
+        pumpButton.className = "off";
+      }
+    }
+
+    // Set button to processing state
+    function setButtonProcessing(processing) {
+      if (processing) {
+        pumpButton.innerText = "Processing...";
+        pumpButton.className = "processing";
+        pumpButton.disabled = true;
+      } else {
+        pumpButton.disabled = false;
+        updatePumpButton();
+      }
+    }
+
+    // Update status message with auto-clear
+    function setStatus(message) {
+      statusDisplay.innerText = message;
+      // Clear status after 3 seconds
+      setTimeout(() => {
+        if (statusDisplay.innerText === message) {
+          statusDisplay.innerText = isPumpRunning ? "Pump is ON" : "Pump is OFF";
+        }
+      }, 3000);
+    }
+
+    // Add event listener for button click
+    pumpButton.addEventListener("click", togglePump);
+
+    // Fetch data immediately and update every 5 seconds
+    fetchData();
+    setInterval(fetchData, 5000);
+  </script>
+</body>
+</html>

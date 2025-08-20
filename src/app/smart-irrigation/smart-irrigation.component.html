@@ -1,0 +1,41 @@
+<div class="dashboard-container">
+  <div class="smart-irrigation-card">
+    <h2>Smart Farming Irrigation</h2>
+    
+    <div class="sensor-cards">
+      <div class="card">
+        <div class="card-icon">🌡</div>
+        <div class="card-content">
+          <div class="card-label">Temperature</div>
+          <div class="card-value">{{ dashboardData?.temperature || '--' }} °C</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon">🌱</div>
+        <div class="card-content">
+          <div class="card-label">Soil Moisture</div>
+          <div class="card-value">{{ dashboardData?.soil_moisture || '--' }} %</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pump-control">
+      <button 
+        [disabled]="pumpState?.isProcessing" 
+        [class.on]="pumpState?.isRunning" 
+        [class.off]="!pumpState?.isRunning"
+        [class.processing]="pumpState?.isProcessing"
+        (click)="togglePump()">
+        {{ pumpState?.isProcessing ? 'Processing...' : (pumpState?.isRunning ? 'Pump ON' : 'Pump OFF') }}
+      </button>
+      
+      <div class="status-message">{{ pumpState?.status || 'Checking pump status...' }}</div>
+    </div>
+    
+    <div class="footer">
+      <p>Last Updated: {{ dashboardData?.timestamp | date:'medium' }}</p>
+      <p>Powered by Blynk Cloud</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,260 @@
+.monitoring-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  flex: 1;
+  min-width: 300px;
+}
+
+.left-panel {
+  flex: 2;
+  min-width: 400px;
+}
+
+.right-panel {
+  flex: 1;
+  min-width: 300px;
+}
+
+.panel-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+/* Sensor metrics */
+.sensor-metrics {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.metric-card {
+  flex: 1;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.metric-icon {
+  font-size: 2.2rem;
+  margin-right: 15px;
+}
+
+.temperature-icon {
+  color: #e74c3c;
+}
+
+.moisture-icon {
+  color: #3498db;
+}
+
+.metric-details {
+  flex: 1;
+}
+
+.metric-title {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Status panel */
+.status-panel {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.status-header {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.pump-status {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.status-on {
+  background-color: rgba(76, 175, 80, 0.15);
+}
+
+.status-off {
+  background-color: rgba(231, 76, 60, 0.15);
+}
+
+.status-processing {
+  background-color: rgba(255, 152, 0, 0.15);
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.status-on .status-indicator {
+  background-color: #4CAF50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.status-off .status-indicator {
+  background-color: #e74c3c;
+}
+
+.status-processing .status-indicator {
+  background-color: #ff9800;
+  animation: pulse 1.5s infinite;
+}
+
+.status-text {
+  font-weight: 500;
+  color: #444;
+}
+
+/* Control section */
+.control-section {
+  margin-bottom: 20px;
+}
+
+.control-button {
+  width: 100%;
+  padding: 14px 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn-on {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-on:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.btn-off {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-off:hover:not(:disabled) {
+  background-color: #c0392b;
+}
+
+.control-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Recommendation alert */
+.recommendation {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 193, 7, 0.15);
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+}
+
+.recommendation-icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+.recommendation-text {
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+/* Activity log */
+.activity-log {
+  height: 400px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.no-activity {
+  color: #999;
+  text-align: center;
+  padding: 20px 0;
+  font-style: italic;
+}
+
+.log-entry {
+  display: flex;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.log-time {
+  min-width: 70px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.log-details {
+  flex: 1;
+  padding-left: 10px;
+}
+
+.log-action {
+  font-weight: 500;
+  margin-bottom: 3px;
+  color: #333;
+}
+
+.log-status {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Footer */
+.info-footer {
+  color: #999;
+  font-size: 0.8rem;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Animation */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}

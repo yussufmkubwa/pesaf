@@ -1,0 +1,123 @@
+.dashboard-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.smart-irrigation-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 1.8em;
+}
+
+.sensor-cards {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.card {
+  flex: 1;
+  background: #eef4fb;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-right: 10px;
+}
+
+.card-content {
+  text-align: left;
+}
+
+.card-label {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.card-value {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+}
+
+.pump-control {
+  margin-bottom: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-bottom: 10px;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.on {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.on:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.off {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.off:hover:not(:disabled) {
+  background-color: #c0392b;
+}
+
+.processing {
+  background-color: #ff9800;
+  color: white;
+  cursor: not-allowed;
+}
+
+.status-message {
+  min-height: 20px;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 5px;
+}
+
+.footer {
+  margin-top: 20px;
+  font-size: 0.85em;
+  color: #888;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.footer p {
+  margin: 5px 0;
+}

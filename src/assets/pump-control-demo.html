@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Farming Pump Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .dashboard {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 350px;
+      text-align: center;
+    }
+    
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    
+    .card {
+      background: #eef4fb;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #444;
+    }
+    
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    
+    button.on {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    button.on:hover {
+      background: #45a049;
+    }
+    
+    button.off {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    button.off:hover {
+      background: #c0392b;
+    }
+    
+    button.processing {
+      background: #ff9800;
+      color: white;
+      cursor: not-allowed;
+    }
+    
+    .status {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #666;
+      min-height: 20px;
+    }
+    
+    .footer {
+      margin-top: 20px;
+      font-size: 0.85em;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Smart Farming</h2>
+    <div class="card" id="tempDisplay">🌡 Temperature: -- °C</div>
+    <div class="card" id="soilDisplay">🌱 Soil Moisture: -- %</div>
+    
+    <!-- Toggle Button with special pump control sequence -->
+    <button id="pumpButton" class="off">Pump OFF</button>
+    <div class="status" id="statusDisplay">Waiting for sensor data...</div>
+    
+    <div class="footer">Powered by Blynk Cloud</div>
+  </div>
+
+  <!-- Load pump control script -->
+  <script src="../assets/js/pump-control.js"></script>
+</body>
+</html>

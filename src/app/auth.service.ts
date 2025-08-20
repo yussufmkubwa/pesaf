@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
-interface User {
+export interface User {
   id: number;
   username: string;
   email: string;
@@ -17,19 +18,99 @@ interface User {
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
+  private currentUser: User | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // Try to load user from local storage on service initialization
+    this.loadUserFromStorage();
+  }
 
   login(credentials: { username: string, password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/auth/login/`, credentials);
+    return this.http.post(`${this.apiUrl}/api/auth/login/`, credentials).pipe(
+      tap((response: any) => {
+        if (response && response.access) {
+          this.setTokens(response);
+          this.loadUserProfile();
+        }
+      })
+    );
   }
 
   getMe(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/me/`);
+    // Return cached user if available
+    if (this.currentUser) {
+      return of(this.currentUser);
+    }
+    
+    return this.http.get<User>(`${this.apiUrl}/api/auth/me/`).pipe(
+      tap(user => {
+        this.currentUser = user;
+        this.setUserRole(user.role);
+      }),
+      catchError(error => {
+        console.error('Error fetching user profile:', error);
+        return throwError(() => new Error('Failed to load user profile'));
+      })
+    );
   }
 
   setTokens(tokens: { access: string, refresh: string }) {
     localStorage.setItem('accessToken', tokens.access);
     localStorage.setItem('refreshToken', tokens.refresh);
+  }
+  
+  logout(): void {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userData');
+    this.currentUser = null;
+  }
+  
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('accessToken');
+  }
+  
+  getToken(): string | null {
+    return localStorage.getItem('accessToken');
+  }
+  
+  getUserRole(): string {
+    return localStorage.getItem('userRole') || 'farmer'; // Default to farmer if not set
+  }
+  
+  isAdmin(): boolean {
+    return this.getUserRole() === 'admin';
+  }
+  
+  isFarmer(): boolean {
+    return this.getUserRole() === 'farmer';
+  }
+  
+  private setUserRole(role: string): void {
+    localStorage.setItem('userRole', role);
+  }
+  
+  private loadUserProfile(): void {
+    this.getMe().subscribe({
+      next: (user) => {
+        console.log('User profile loaded:', user);
+        localStorage.setItem('userData', JSON.stringify(user));
+      },
+      error: (error) => {
+        console.error('Failed to load user profile:', error);
+      }
+    });
+  }
+  
+  private loadUserFromStorage(): void {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      try {
+        this.currentUser = JSON.parse(userData);
+      } catch (e) {
+        console.error('Error parsing user data from storage:', e);
+      }
+    }
   }
 }

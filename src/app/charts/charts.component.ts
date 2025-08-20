@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { DeviceReadingService } from '../device-reading.service';
-import { IrrigationEventService } from '../irrigation-event.service';
 
 Chart.register(...registerables);
 
@@ -14,20 +13,16 @@ Chart.register(...registerables);
   styleUrls: ['./charts.component.css']
 })
 export class ChartsComponent implements OnInit {
-  @Input() chartType: 'soilMoisture' | 'waterUsage' = 'soilMoisture';
+  @Input() chartType: 'soilMoisture' = 'soilMoisture'; // Removed waterUsage option
   @ViewChild('chartCanvas', { static: true }) chartCanvas!: ElementRef;
 
   constructor(
-    private deviceReadingService: DeviceReadingService,
-    private irrigationEventService: IrrigationEventService
+    private deviceReadingService: DeviceReadingService
   ) { }
 
   ngOnInit(): void {
-    if (this.chartType === 'soilMoisture') {
-      this.createSoilMoistureChart();
-    } else {
-      this.createWaterUsageChart();
-    }
+    // Only create soil moisture chart as water usage is removed
+    this.createSoilMoistureChart();
   }
 
   createSoilMoistureChart(): void {
@@ -38,17 +33,9 @@ export class ChartsComponent implements OnInit {
     });
   }
 
-  createWaterUsageChart(): void {
-    this.irrigationEventService.getIrrigationEvents().subscribe(events => {
-      const labels = events.map(e => new Date(e.timestamp!).toLocaleDateString());
-      const data = events.map(e => e.water_consumed_liters);
-      this.createChart(labels, data, 'Water Consumed (L)');
-    });
-  }
-
   createChart(labels: string[], data: number[], label: string): void {
     new Chart(this.chartCanvas.nativeElement, {
-      type: this.chartType === 'soilMoisture' ? 'line' : 'bar',
+      type: 'line', // Always a line chart since we only have soil moisture
       data: {
         labels: labels,
         datasets: [{

@@ -6,10 +6,71 @@
     </button>
   </div>
   
-  <div *ngIf="error" class="alert alert-danger">
+  <div *ngIf="error && error !== 'Using direct connection to sensors. Some features may be limited.'" class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+    <div class="mt-2">
+      <button class="btn btn-sm btn-outline-secondary" (click)="refreshData()">Try Again</button>
+    </div>
+  </div>
+  
+  <div *ngIf="error === 'Using direct connection to sensors. Some features may be limited.'" class="alert alert-warning">
+    <i class="fas fa-info-circle me-2"></i>
     {{ error }}
   </div>
   
+  <div *ngIf="isUsingFallbackData && !error" class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>
+    Using backup data source. Some readings may be estimated.
+  </div>
+  
+  <!-- System Diagnostics Section -->
+  <div class="card mb-4">
+    <div class="card-header bg-info text-white">
+      <h3 class="mb-0">System Diagnostics</h3>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Connection Status</h5>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>API Connection:</span>
+            <span class="badge" [ngClass]="{'bg-success': !error, 'bg-warning': isUsingFallbackData, 'bg-danger': error && error !== 'Using direct connection to sensors. Some features may be limited.'}">
+              {{ !error ? 'Connected' : (isUsingFallbackData ? 'Using Fallback' : 'Error') }}
+            </span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>Last Data Update:</span>
+            <span>{{ latestReading?.timestamp | date:'medium' || 'Never' }}</span>
+          </div>
+          <div class="mt-3">
+            <button class="btn btn-primary" (click)="diagnoseSensors()">
+              <i class="fas fa-stethoscope me-2"></i>Run Diagnostic
+            </button>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <h5>Troubleshooting</h5>
+          <ul class="list-group">
+            <li class="list-group-item" [ngClass]="{'list-group-item-success': !error, 'list-group-item-danger': error && error !== 'Using direct connection to sensors. Some features may be limited.'}">
+              <i class="fas" [ngClass]="{'fa-check-circle text-success': !error, 'fa-times-circle text-danger': error && error !== 'Using direct connection to sensors. Some features may be limited.'}"></i>
+              Backend API Connection
+            </li>
+            <li class="list-group-item" [ngClass]="{'list-group-item-success': !error || isUsingFallbackData, 'list-group-item-danger': error && !isUsingFallbackData}">
+              <i class="fas" [ngClass]="{'fa-check-circle text-success': !error || isUsingFallbackData, 'fa-times-circle text-danger': error && !isUsingFallbackData}"></i>
+              Blynk Cloud Connection
+            </li>
+            <li class="list-group-item list-group-item-success">
+              <i class="fas fa-check-circle text-success"></i>
+              Local Fallback Data
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Latest readings section -->
   <div class="card mb-4">
     <div class="card-header bg-primary text-white d-flex justify-content-between">

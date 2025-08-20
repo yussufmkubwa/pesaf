@@ -1,28 +1,70 @@
-.container-fluid {
-  padding: 2rem;
-  background-color: #f0f2f5;
+.dashboard {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  width: 350px;
+  text-align: center;
+  margin: 30px auto;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .card {
-  border: none;
+  background: #eef4fb;
+  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card-header {
-  background-color: #007bff;
-  color: #fff;
+  margin-bottom: 20px;
+  font-size: 1.2em;
   font-weight: bold;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  padding: 1rem 1.5rem;
+  color: #444;
 }
 
-.card-body {
-  padding: 1.5rem;
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.on {
+  background: #4CAF50;
+  color: white;
+}
+
+.on:hover:not(:disabled) {
+  background: #45a049;
+}
+
+.off {
+  background: #e74c3c;
+  color: white;
+}
+
+.off:hover:not(:disabled) {
+  background: #c0392b;
+}
+
+.footer {
+  margin-top: 20px;
+  font-size: 0.85em;
+  color: #888;
 }
